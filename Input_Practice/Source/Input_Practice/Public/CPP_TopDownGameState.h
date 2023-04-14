@@ -29,6 +29,17 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "CPP")
 		void RemoveCharacterFromList(AAICharacter* Character);
 
+	UFUNCTION(BlueprintCallable, Category = "CPP")
+		void SetAllCharacterOwners();
+
+	UFUNCTION(BlueprintCallable, Category = "CPP")
+		TArray<AAICharacter*> GetAPlayersCharacters(int32 PlayerIndex);
+
+	UFUNCTION(BlueprintCallable, Category = "CPP")
+		bool GetCharacterAtGridPosition(FVector2D Position2D, AAICharacter*& FoundCharacter);
+
+	UFUNCTION(BlueprintCallable, Category = "CPP")
+		AAICharacter* GetNextActiveCharacter();
 
 private:
 

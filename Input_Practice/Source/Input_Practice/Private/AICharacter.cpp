@@ -9,6 +9,10 @@ AAICharacter::AAICharacter()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	GridComponent = CreateDefaultSubobject<UAComp_Grid>(TEXT("GridComponent"));
+	HealthComponent = CreateDefaultSubobject<UAComp_Health>(TEXT("HealthComponent"));
+	AttackComponent = CreateDefaultSubobject<UAComp_Attack>(TEXT("AttackComponent"));
+
 }
 
 // Called when the game starts or when spawned
@@ -30,5 +34,20 @@ void AAICharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+}
+
+int32 AAICharacter::GetPlayerIndex() const
+{
+	return PlayerIndex;
+}
+
+int32 AAICharacter::GetSpeed() const
+{
+	return Speed;
+}
+
+bool AAICharacter::GetHasActedThisRotation() const
+{
+	return HasActedThisRotation;
 }
 

@@ -14,5 +14,12 @@ class INPUT_PRACTICE_API ACPP_TopDownControllerPlayer : public APlayerController
 {
 	GENERATED_BODY()
 	
+private:
+	UPROPERTY(VisibleAnywhere, Category = "CPP")
+		int32 PlayerIndex;
 
+public: 
+
+	UFUNCTION(BlueprintPure, Category = "CPP")
+		int32 GetPlayerIndex() const;
 };
