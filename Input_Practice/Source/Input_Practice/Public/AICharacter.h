@@ -27,6 +27,9 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "CPP")
 		UAComp_Attack* AttackComponent;
 
+	UPROPERTY(VisibleAnywhere, Category = "CPP|Attributes")
+		int32 Speed;
+
 protected: 
 
 	UPROPERTY(VisibleAnywhere, Category = "CPP")
@@ -35,8 +38,7 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category = "CPP")
 		bool  HasActedThisRotation;
 
-	UPROPERTY(VisibleAnywhere, EditAnywhere, Category = "CPP|Attributes")
-		int32 Speed;
+	
 
 private: 
 
@@ -61,5 +63,8 @@ public:
 
 	UFUNCTION(BlueprintPure, Category = "CPP|Constants")
 		bool GetHasActedThisRotation() const;
+
+	UFUNCTION(BlueprintCallable, Category = "CPP|Public")
+		void SetHasActedThisRotation(bool NewValue);
 
 };

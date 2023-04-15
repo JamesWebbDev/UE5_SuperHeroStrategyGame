@@ -51,3 +51,13 @@ bool AAICharacter::GetHasActedThisRotation() const
 	return HasActedThisRotation;
 }
 
+void AAICharacter::SetHasActedThisRotation(bool NewValue)
+{
+	HasActedThisRotation = NewValue;
+
+	if (HasActedThisRotation) 
+	{
+		
+	}
+}
+

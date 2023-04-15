@@ -32,8 +32,18 @@ void UAComp_Grid::TickComponent(float DeltaTime, ELevelTick TickType, FActorComp
 	// ...
 }
 
+ACPP_Grid* UAComp_Grid::GetGrid() const
+{
+	return Grid;
+}
+
 FVector2D UAComp_Grid::GetCurrentGridPosition() const
 {
 	return GridPosition;
+}
+
+void UAComp_Grid::SetGridPosition(FVector2D NewPosition)
+{
+	GridPosition = NewPosition;
 }
 

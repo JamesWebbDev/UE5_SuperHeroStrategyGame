@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "CPP_Grid.h"
 #include "AComp_Grid.generated.h"
 
 
@@ -18,8 +19,14 @@ public:
 
 private: 
 
+
+	UPROPERTY(VisibleAnywhere, Category = "CPP")
+	ACPP_Grid* Grid;
+
 	UPROPERTY(VisibleAnywhere, Category = "CPP")
 	FVector2D GridPosition;
+
+	
 
 protected:
 	// Called when the game starts
@@ -29,6 +36,12 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	UFUNCTION(BlueprintPure, Category = "CPP")
-	FVector2D GetCurrentGridPosition() const;
+	UFUNCTION(BlueprintPure, Category = "CPP|Constants")
+		ACPP_Grid* GetGrid() const;
+
+	UFUNCTION(BlueprintPure, Category = "CPP|Constants")
+		FVector2D GetCurrentGridPosition() const;
+
+	UFUNCTION(BlueprintCallable, Category = "CPP")
+		void SetGridPosition(FVector2D NewPosition);
 };
