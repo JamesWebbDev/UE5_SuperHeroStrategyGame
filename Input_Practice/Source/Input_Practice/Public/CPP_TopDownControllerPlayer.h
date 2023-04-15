@@ -22,4 +22,7 @@ public:
 
 	UFUNCTION(BlueprintPure, Category = "CPP")
 		int32 GetPlayerIndex() const;
+
+	UFUNCTION(BlueprintCallable, Category = "CPP")
+		void SetPlayerIndex(int32 NewIndex);
 };

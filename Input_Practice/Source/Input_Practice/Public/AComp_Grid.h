@@ -44,4 +44,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "CPP")
 		void SetGridPosition(FVector2D NewPosition);
+
+	UFUNCTION(BlueprintCallable, Category = "CPP")
+		void SetWorldPositionFromCurrentPosition();
 };

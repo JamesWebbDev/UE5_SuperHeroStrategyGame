@@ -47,3 +47,14 @@ void UAComp_Grid::SetGridPosition(FVector2D NewPosition)
 	GridPosition = NewPosition;
 }
 
+void UAComp_Grid::SetWorldPositionFromCurrentPosition()
+{
+	if (Grid == nullptr)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Couldn't get Grid reference on Grid Component."));
+		return;
+	}
+
+
+}
+

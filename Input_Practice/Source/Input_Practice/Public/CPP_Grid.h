@@ -65,4 +65,19 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	UFUNCTION(BlueprintPure, Category = "CPP|Constants")
+		bool IsTileValid(int32 Row, int32 Column) const;
+
+	UFUNCTION(BlueprintPure, Category = "CPP|Constants")
+		float GetGridWidth() const;
+
+	UFUNCTION(BlueprintPure, Category = "CPP|Constants")
+		float GetGridHeight() const;
+
+	UFUNCTION(BlueprintCallable, Category = "CPP")
+		bool LocationToTile(const FVector Location, int32& InRow, int32& InColumn);
+
+	UFUNCTION(BlueprintCallable, Category = "CPP")
+		bool TileToGridWorldLocation(const int32 InRow, const int32 InColumn, const bool GetCenter, FVector2D& OutGridLocation);
+
 };
