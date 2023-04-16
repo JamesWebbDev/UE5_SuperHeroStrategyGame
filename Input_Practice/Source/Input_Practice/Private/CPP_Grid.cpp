@@ -49,14 +49,14 @@ float ACPP_Grid::GetGridHeight() const
 	return NumColumns * TileSize;
 }
 
-bool ACPP_Grid::LocationToTile(const FVector Location, int32& InRow, int32& InColumn)
+bool ACPP_Grid::LocationToTile(const FVector Location, int32& OutRow, int32& OutColumn)
 {
 	const FVector ActorLocation = GetActorLocation();
 
-	InRow = FMath::FloorToInt(((Location.X - ActorLocation.X) / GetGridWidth()) * NumRows);
-	InColumn = FMath::FloorToInt(((Location.Y - ActorLocation.Y) / GetGridHeight()) * NumColumns);
+	OutRow = FMath::FloorToInt(((Location.X - ActorLocation.X) / GetGridWidth()) * NumRows);
+	OutColumn = FMath::FloorToInt(((Location.Y - ActorLocation.Y) / GetGridHeight()) * NumColumns);
 
-	return IsTileValid(InRow, InColumn);
+	return IsTileValid(OutRow, OutColumn);
 }
 
 bool ACPP_Grid::TileToGridWorldLocation(const int32 InRow, const int32 InColumn, const bool GetCenter, FVector2D& OutGridLocation)

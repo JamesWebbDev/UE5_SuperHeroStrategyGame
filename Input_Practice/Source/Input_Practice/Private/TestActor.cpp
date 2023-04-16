@@ -2,7 +2,6 @@
 
 
 #include "TestActor.h"
-#include "GenericStructs.h"
 
 // Sets default values
 ATestActor::ATestActor()

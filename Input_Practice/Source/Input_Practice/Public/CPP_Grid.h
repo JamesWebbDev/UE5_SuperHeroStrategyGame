@@ -75,7 +75,7 @@ public:
 		float GetGridHeight() const;
 
 	UFUNCTION(BlueprintCallable, Category = "CPP")
-		bool LocationToTile(const FVector Location, int32& InRow, int32& InColumn);
+		bool LocationToTile(const FVector Location, int32& OutRow, int32& OutColumn);
 
 	UFUNCTION(BlueprintCallable, Category = "CPP")
 		bool TileToGridWorldLocation(const int32 InRow, const int32 InColumn, const bool GetCenter, FVector2D& OutGridLocation);

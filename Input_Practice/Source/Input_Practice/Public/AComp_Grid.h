@@ -19,6 +19,8 @@ public:
 
 private: 
 
+	UPROPERTY(VisibleAnywhere, Category = "CPP")
+	AActor* Owner;
 
 	UPROPERTY(VisibleAnywhere, Category = "CPP")
 	ACPP_Grid* Grid;
@@ -42,9 +44,22 @@ public:
 	UFUNCTION(BlueprintPure, Category = "CPP|Constants")
 		FVector2D GetCurrentGridPosition() const;
 
+	UFUNCTION(BlueprintPure, Category = "CPP")
+		FVector2D GetCurrentLocationAtTile();
+
 	UFUNCTION(BlueprintCallable, Category = "CPP")
 		void SetGridPosition(FVector2D NewPosition);
 
 	UFUNCTION(BlueprintCallable, Category = "CPP")
+		void SetWorldPositionFromGridPosition();
+
+	UFUNCTION(BlueprintCallable, Category = "CPP")
 		void SetWorldPositionFromCurrentPosition();
+
+	UFUNCTION(BlueprintCallable, Category = "CPP")
+		void GetAttackableTiles(TArray<FVector2D>AffectedTiles_UpDir, FVector MousePosition, TArray<FVector2D>& OutTiles);
+
+	//UFUNCTION(BlueprintCallable, Category = "CPP")
+	//	TArray<FVector2D> RotatePositionsThenApplyOrigin(TArray<FVector2D> TilePositions, FVector2D Origin, DirEnum RotateDirection);
+	
 };

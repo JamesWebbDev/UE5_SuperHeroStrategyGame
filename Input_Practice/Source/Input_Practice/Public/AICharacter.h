@@ -9,6 +9,8 @@
 #include "AComp_Attack.h"
 #include "AICharacter.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FActionTakenDelegate, bool, HasActed);
+
 UCLASS()
 class INPUT_PRACTICE_API AAICharacter : public ACharacter
 {
@@ -29,6 +31,9 @@ public:
 
 	UPROPERTY(VisibleAnywhere, Category = "CPP|Attributes")
 		int32 Speed;
+
+	UPROPERTY(BlueprintAssignable, Category = "CPP")
+		FActionTakenDelegate OnActionTaken;
 
 protected: 
 
@@ -66,5 +71,6 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "CPP|Public")
 		void SetHasActedThisRotation(bool NewValue);
+
 
 };

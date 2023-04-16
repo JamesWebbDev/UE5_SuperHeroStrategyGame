@@ -32,3 +32,4 @@ void UAComp_Health::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 	// ...
 }
 
+

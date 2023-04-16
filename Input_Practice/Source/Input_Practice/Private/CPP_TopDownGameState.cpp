@@ -134,14 +134,8 @@ AAICharacter* ACPP_TopDownGameState::GetNextActiveCharacter()
 
 	}
 
-	if (NextCharacter != nullptr)
-	{
-		return NextCharacter;
-	}
-
-
 	// Update This part of the code to reset HasActed bools and restart function
-	return nullptr;
+	return NextCharacter;
 }
 
 

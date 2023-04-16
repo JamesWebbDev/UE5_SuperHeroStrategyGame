@@ -55,9 +55,13 @@ void AAICharacter::SetHasActedThisRotation(bool NewValue)
 {
 	HasActedThisRotation = NewValue;
 
-	if (HasActedThisRotation) 
+	OnActionTaken.Broadcast(HasActedThisRotation);
+
+	if (HasActedThisRotation)
 	{
-		
+		GridComponent->SetGridPosition(GridComponent->GetCurrentLocationAtTile());
 	}
 }
+
+
 
