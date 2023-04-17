@@ -22,6 +22,7 @@ void ACPP_TopDownGameState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>
 /// <returns></returns>
 TArray<ACPP_TopDownControllerPlayer*>  ACPP_TopDownGameState::GetControllersTopDown() const
 {
+
 	TArray<ACPP_TopDownControllerPlayer*> ControllerArray;
 
 	for (TObjectPtr<APlayerState> PlayerState : PlayerArray)
