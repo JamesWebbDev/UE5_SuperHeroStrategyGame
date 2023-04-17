@@ -32,4 +32,19 @@ void UAComp_Health::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 	// ...
 }
 
+int32 UAComp_Health::GetCurrentHealth() const
+{
+	return CurrentHealth;
+}
+
+int32 UAComp_Health::GetMaxHealth() const
+{
+	return MaxHealth;
+}
+
+void UAComp_Health::TakeDamage(int32 Damage)
+{
+
+}
+
 

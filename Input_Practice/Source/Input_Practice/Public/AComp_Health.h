@@ -17,14 +17,29 @@ public:
 	UAComp_Health();
 
 protected:
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "CPP")
+		int32 MaxHealth;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "CPP")
+		int32 CurrentHealth;
+
 	// Called when the game starts
 	virtual void BeginPlay() override;
+
+
 
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "CPP")
+	UFUNCTION(BlueprintPure, Category = "CPP|Constants")
+		int32 GetCurrentHealth() const;
+
+	UFUNCTION(BlueprintPure, Category = "CPP|Constants")
+		int32 GetMaxHealth() const;
+
+	UFUNCTION(BlueprintCallable, Category = "CPP")
 		void TakeDamage(int32 Damage);
 		
 };
