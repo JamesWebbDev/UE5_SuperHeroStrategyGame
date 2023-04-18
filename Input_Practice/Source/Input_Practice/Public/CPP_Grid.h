@@ -69,13 +69,13 @@ protected:
 		float LineThickness;
 
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "CPP|Grid")
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "CPP|Grid")
 		bool HighlightSelectedTile;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "CPP|Grid")
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "CPP|Grid")
 		bool HighlightMoveableTiles;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "CPP|Grid")
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "CPP|Grid")
 		bool HighlightAttackableTiles;
 
 
@@ -103,6 +103,20 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "CPP|Attack")
 		float AttackOpacity;
 
+private: 
+
+	UFUNCTION(BlueprintCallable, Category = "CPP|Grid")
+		UMaterialInstanceDynamic* CreatMaterialInstance(const FLinearColor InColour, const float InOpacity);
+
+	UFUNCTION(BlueprintCallable, Category = "CPP|Grid")
+		void CreateLine(FVector InStart, FVector InEnd, float InThickness, TArray<FVector>* InVertices, TArray<int32>* InTriangles);
+
+	UFUNCTION(BlueprintPure, Category = "CPP|Constants")
+		float GetGridWidth() const;
+
+	UFUNCTION(BlueprintPure, Category = "CPP|Constants")
+		float GetGridHeight() const;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -112,12 +126,6 @@ public:
 
 	UFUNCTION(BlueprintPure, Category = "CPP|Constants")
 		float GetTileSize() const;
-
-	UFUNCTION(BlueprintPure, Category = "CPP|Constants")
-		float GetGridWidth() const;
-
-	UFUNCTION(BlueprintPure, Category = "CPP|Constants")
-		float GetGridHeight() const;
 
 	UFUNCTION(BlueprintCallable, Category = "CPP")
 		bool LocationToTile(const FVector Location, int32& OutRow, int32& OutColumn);
