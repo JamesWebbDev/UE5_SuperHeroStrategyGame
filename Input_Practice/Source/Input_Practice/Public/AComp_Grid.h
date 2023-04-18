@@ -63,7 +63,7 @@ public:
 		void GetAttackableTiles(TArray<FVector2D>AffectedTiles_UpDir, FVector MousePosition, TArray<FVector2D>& OutTiles);
 
 	UFUNCTION(BlueprintCallable, Category = "CPP")
-		void GetSurroundingTiles(int32 Range, bool IsCurrentPosOrigin, TSet<FVector2D>& OutTiles);
+		void GetSurroundingTiles(int32 Range, bool UseCurrentPosAsOrigin, TSet<FVector2D>& OutTiles);
 
 	UFUNCTION(BlueprintCallable, Category = "CPP")
 		TArray<FVector2D> RotatePositionsThenApplyOrigin(TArray<FVector2D> TilePositions, FVector2D Origin, E_CardinalDirection RotateDirection);

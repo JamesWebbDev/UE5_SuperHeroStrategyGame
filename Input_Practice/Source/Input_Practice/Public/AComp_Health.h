@@ -31,6 +31,7 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, ReplicatedUsing = OnHealthChanged)
 	int32 CurrentHealth;
+
 	UPROPERTY(VisibleAnywhere, ReplicatedUsing = OnIsDeadChanged)
 	bool IsDead;
 

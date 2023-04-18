@@ -2,6 +2,8 @@
 
 
 #include "CPP_TopDownGameState.h"
+#include "AICharacter.h"
+#include "CPP_TopDownControllerPlayer.h"
 #include "Net/UnrealNetwork.h"
 #include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
 #include "GameFramework/PlayerState.h"
@@ -128,7 +130,7 @@ AAICharacter* ACPP_TopDownGameState::GetNextActiveCharacter()
 			continue;
 		}
 
-		if (Character->GetSpeed() > NextCharacter->GetSpeed())
+		if (Character->GetMoveRange() > NextCharacter->GetMoveRange())
 		{
 			NextCharacter = Character;
 		}

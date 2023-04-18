@@ -131,9 +131,9 @@ void UAComp_Grid::GetAttackableTiles(TArray<FVector2D> AffectedTiles_UpDir, FVec
 	}
 }
 
-void UAComp_Grid::GetSurroundingTiles(int32 Range, bool IsCurrentPosOrigin, TSet<FVector2D>& OutTiles)
+void UAComp_Grid::GetSurroundingTiles(int32 Range, bool UseCurrentPosAsOrigin, TSet<FVector2D>& OutTiles)
 {
-	const FVector2D Origin = IsCurrentPosOrigin ? GetCurrentLocationAtTile() : GridPosition;
+	const FVector2D Origin = UseCurrentPosAsOrigin ? GetCurrentLocationAtTile() : GridPosition;
 	const int32 NegativeRange = Range * -1;
 	OutTiles.Add(Origin);
 

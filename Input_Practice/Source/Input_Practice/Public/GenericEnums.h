@@ -13,3 +13,11 @@ enum class E_CardinalDirection : uint8
 	CD_Right UMETA(DisplayName = "East"),
 	CD_Left UMETA(DisplayName = "West")
 };
+
+UENUM(BlueprintType)
+enum class E_PlayerActions : uint8
+{
+	PA_Pass UMETA(DisplayName = "Pass"),
+	PA_Move UMETA(DisplayName = "Move"),
+	PA_Attack UMETA(DisplayName = "Attack"),
+};

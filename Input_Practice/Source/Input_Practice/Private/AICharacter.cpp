@@ -2,6 +2,10 @@
 
 
 #include "AICharacter.h"
+#include "Blueprint/AIBlueprintHelperLibrary.h"
+#include "CPP_TopDownGameState.h"
+#include "CPP_TopDownControllerPlayer.h"
+
 
 // Sets default values
 AAICharacter::AAICharacter()
@@ -20,6 +24,56 @@ void AAICharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	TDGameState = Cast<ACPP_TopDownGameState>(GetWorld()->GetGameState());
+
+	if (TDGameState == nullptr) 
+	{
+		UE_LOG(LogTemp, Error, TEXT("Couldn't find 'CPP_TopDownGameState' in World!"));
+		return;
+	}
+
+	OwningPlayer = Cast<ACPP_TopDownControllerPlayer>(GetWorld()->GetFirstPlayerController());
+}
+
+void AAICharacter::MoveToDestination()
+{
+	if (!HasAuthority()) 
+	{
+		return;
+	}
+
+	const FVector ActorLocation = GetActorLocation();
+
+	const float DistanceToDest = (TargetDestination - ActorLocation).Size();
+
+	UCharacterMovementComponent* MovePtr = GetCharacterMovement();
+	float MoveSpeed = DistanceToDest > WalkDistance ? RunSpeed : WalkSpeed;
+	MovePtr->MaxWalkSpeed = MoveSpeed;
+
+	if (DistanceToDest > SnapDistance)
+	{
+		UAIBlueprintHelperLibrary::SimpleMoveToLocation(GetController(), TargetDestination);
+	}
+	else
+	{
+		SetIsAtDestination(true);
+	}
+}
+
+void AAICharacter::SetIsAtDestination(bool NewValue)
+{
+	if (IsAtDestination == NewValue)
+	{
+		return;
+	}
+
+	IsAtDestination = NewValue;
+
+	if (IsAtDestination == true)
+	{
+		GridComponent->SetWorldPositionFromCurrentPosition();
+		OnActionConcluded.Broadcast();
+	}
 }
 
 // Called every frame
@@ -27,6 +81,7 @@ void AAICharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	MoveToDestination();
 }
 
 // Called to bind functionality to input
@@ -41,14 +96,53 @@ int32 AAICharacter::GetPlayerIndex() const
 	return PlayerIndex;
 }
 
-int32 AAICharacter::GetSpeed() const
+int32 AAICharacter::GetMoveRange() const
 {
-	return Speed;
+	return MoveRange;
 }
 
 bool AAICharacter::GetHasActedThisRotation() const
 {
 	return HasActedThisRotation;
+}
+
+bool AAICharacter::IsValidGridTargetPosition(FVector2D AttackedTile, int32 Range) const
+{
+	AAICharacter* FoundCharacter;
+	const bool CharacterIsAtTile = TDGameState->GetCharacterAtGridPosition(AttackedTile, FoundCharacter);
+
+	if (FoundCharacter == nullptr)
+	{
+		return false;
+	}
+
+	const bool IsEnemy = FoundCharacter->GetPlayerIndex() != GetPlayerIndex();
+
+	const float DistanceToTile = FVector2D::Distance(AttackedTile, GridComponent->GetCurrentLocationAtTile());
+	const bool TileInRange = DistanceToTile <= Range + (Range / 10);
+
+	if (IsEnemy && TileInRange)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+bool AAICharacter::IsValidGridMovePosition(FVector2D MoveableTile) const
+{
+	AAICharacter* FoundCharacter;
+	const bool CharacterIsAtTile = TDGameState->GetCharacterAtGridPosition(MoveableTile, FoundCharacter);
+
+	const float DistanceToTile = FVector2D::Distance(MoveableTile, GridComponent->GetCurrentGridPosition());
+	const bool TileInRange = DistanceToTile <= MoveRange + (MoveRange / 10);
+
+	if (!CharacterIsAtTile && TileInRange)
+	{
+		return true;
+	}
+
+	return false;
 }
 
 void AAICharacter::SetHasActedThisRotation(bool NewValue)

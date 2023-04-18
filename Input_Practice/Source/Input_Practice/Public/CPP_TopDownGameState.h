@@ -4,9 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameState.h"
-#include "CPP_TopDownControllerPlayer.h"
-#include "AICharacter.h"
 #include "CPP_TopDownGameState.generated.h"
+
+// ------- FORWARD DECLARATIONS ---------
+class AAICharacter;
+class CPP_TopDownControllerPlayer;
+
 
 UCLASS()
 class INPUT_PRACTICE_API ACPP_TopDownGameState : public AGameState
