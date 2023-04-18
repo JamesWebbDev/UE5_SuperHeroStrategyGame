@@ -10,6 +10,21 @@ ACPP_Grid::ACPP_Grid()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	Scene = CreateDefaultSubobject<USceneComponent>(TEXT("CPP_Scene"));
+	LineProceduralMesh = CreateDefaultSubobject<UProceduralMeshComponent>(TEXT("CPP_Line Procedural Mesh"));
+	SelectionProceduralMesh = CreateDefaultSubobject<UProceduralMeshComponent>(TEXT("CPP_Selection Procedural Mesh"));
+	MoveProceduralMeshParent = CreateDefaultSubobject<USceneComponent>(TEXT("CPP_MoveParent"));
+	AttackProceduralMeshParent = CreateDefaultSubobject<USceneComponent>(TEXT("CPP_AttackParent"));
+
+	Scene->SetupAttachment(GetRootComponent());
+	LineProceduralMesh->SetupAttachment(Scene);
+	SelectionProceduralMesh->SetupAttachment(Scene);
+	MoveProceduralMeshParent->SetupAttachment(Scene);
+	AttackProceduralMeshParent->SetupAttachment(Scene);
+
+
+	MoveProceduralMeshParent->GetChildrenComponents(false, MeshMoveArray);
+	AttackProceduralMeshParent->GetChildrenComponents(false, AttackMoveArray);
 }
 
 // Called when the game starts or when spawned
@@ -37,6 +52,11 @@ bool ACPP_Grid::IsTileValid(int32 Row, int32 Column) const
 	}
 
 	return false;
+}
+
+float ACPP_Grid::GetTileSize() const
+{
+	return TileSize;
 }
 
 float ACPP_Grid::GetGridWidth() const

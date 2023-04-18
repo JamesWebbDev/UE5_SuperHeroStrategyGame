@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "ProceduralMeshComponent.h"
 #include "CPP_Grid.generated.h"
 
 UCLASS()
@@ -15,6 +16,38 @@ public:
 	// Sets default values for this actor's properties
 	ACPP_Grid();
 
+	
+
+protected:
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "CPP|Structure")
+		USceneComponent* Scene;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "CPP|Structure")
+		UProceduralMeshComponent* LineProceduralMesh;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "CPP|Structure")
+		UProceduralMeshComponent* SelectionProceduralMesh;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "CPP|Structure")
+		USceneComponent* MoveProceduralMeshParent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "CPP|Structure")
+		USceneComponent* AttackProceduralMeshParent;
+
+
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "CPP|Procedural Meshes")
+		TArray<UProceduralMeshComponent*> MeshMoveArray;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "CPP|Procedural Meshes")
+		TArray<UProceduralMeshComponent*> MeshAttackArray;
+
+	
+
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "CPP|Grid")
 		int32 NumRows;
 
@@ -24,6 +57,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "CPP|Grid")
 		int32 TileSize;
 
+
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "CPP|Grid")
 		int32 NumMoveMeshes;
 
@@ -32,6 +67,17 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "CPP|Grid")
 		float LineThickness;
+
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "CPP|Grid")
+		bool HighlightSelectedTile;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "CPP|Grid")
+		bool HighlightMoveableTiles;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "CPP|Grid")
+		bool HighlightAttackableTiles;
+
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "CPP|Lines")
 		FLinearColor LineColour;
@@ -57,16 +103,15 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "CPP|Attack")
 		float AttackOpacity;
 
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 	UFUNCTION(BlueprintPure, Category = "CPP|Constants")
 		bool IsTileValid(int32 Row, int32 Column) const;
+
+	UFUNCTION(BlueprintPure, Category = "CPP|Constants")
+		float GetTileSize() const;
 
 	UFUNCTION(BlueprintPure, Category = "CPP|Constants")
 		float GetGridWidth() const;
