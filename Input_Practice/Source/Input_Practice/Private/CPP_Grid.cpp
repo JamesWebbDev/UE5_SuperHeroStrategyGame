@@ -10,85 +10,34 @@ ACPP_Grid::ACPP_Grid()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	UE_LOG(LogTemp, Display, TEXT("------- START CONSTRUCTING -------"));
+
 	Scene = CreateDefaultSubobject<USceneComponent>(TEXT("CPP_Scene"));
 	LineProceduralMesh = CreateDefaultSubobject<UProceduralMeshComponent>(TEXT("CPP_Line Procedural Mesh"));
 	SelectionProceduralMesh = CreateDefaultSubobject<UProceduralMeshComponent>(TEXT("CPP_Selection Procedural Mesh"));
 	MoveProceduralMeshParent = CreateDefaultSubobject<USceneComponent>(TEXT("CPP_MoveParent"));
 	AttackProceduralMeshParent = CreateDefaultSubobject<USceneComponent>(TEXT("CPP_AttackParent"));
 
-	Scene->SetupAttachment(GetRootComponent());
+	RootComponent = Scene;
+
 	LineProceduralMesh->SetupAttachment(Scene);
 	SelectionProceduralMesh->SetupAttachment(Scene);
 	MoveProceduralMeshParent->SetupAttachment(Scene);
 	AttackProceduralMeshParent->SetupAttachment(Scene);
 
-
-	TArray<USceneComponent*> TempMoveArray;
-	TArray<USceneComponent*> TempAttackArray;
-
-	MoveProceduralMeshParent->GetChildrenComponents(false, TempMoveArray);
-	AttackProceduralMeshParent->GetChildrenComponents(false, TempAttackArray);
-
-	for (USceneComponent* MoveMesh : TempMoveArray)
-	{
-		MeshMoveArray.Add(Cast<UProceduralMeshComponent>(MoveMesh));
-	}
-
-	for (USceneComponent* AttackMesh : TempAttackArray)
-	{
-		MeshAttackArray.Add(Cast<UProceduralMeshComponent>(AttackMesh));
-	}
-
-	UMaterialInstance* LineMatInst = CreatMaterialInstance(LineColour, LineOpacity);
-	UMaterialInstance* SelectedMatInst = CreatMaterialInstance(SelectionColour, SelectionOpacity);
-	UMaterialInstance* MoveMatInst = CreatMaterialInstance(MoveColour, MoveOpacity);
-	UMaterialInstance* AttackMatInst = CreatMaterialInstance(AttackColour, AttackOpacity);
-
-	// Create Horizontal Lines Geometry
-	TArray<FVector>* NormalsEmpty;
-	TArray<FVector2D>* UVEmpty;
-	TArray<FColor>* VertColoursEmpty;
-	TArray<FProcMeshTangent>* TangentsEmpty;
-
-	TArray<FVector>* LineVertices;
-	TArray<int32>* LineTriangles;
-	float LineStart;
-	const float LineHorizEnd = GetGridWidth();
-	const float LineVertiEnd = GetGridHeight();
-
-	for (int i = 0; i <= NumRows; i++)
-	{
-		LineStart = i * TileSize;
-
-		CreateLine(FVector(LineStart), FVector(LineStart, LineHorizEnd, 0), LineThickness, LineVertices, LineTriangles);
-	}
-
-	for (int i = 0; i <= NumColumns; i++)
-	{
-		LineStart = i * TileSize;
-
-		CreateLine(FVector(0, LineStart, 0), FVector(LineVertiEnd, LineStart, 0), LineThickness, LineVertices, LineTriangles);
-	}
-
-	TArray<FVector> LineVerticesData = *LineVertices;
-	TArray<int32> LineTriangleData = *LineTriangles;
-
-	//UProceduralMeshComponent::CreateMeshSection_LinearColor(0, LineVerticesData.get, LineTriangleData);
-	//UProceduralMeshComponent::CreateMeshSection_LinearColor();
-	
+	MeshMoveArray = GetMoveMeshChildren();
+	MeshAttackArray = GetAttackMeshChildren();
 }
 
 // Called when the game starts or when spawned
 void ACPP_Grid::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 UMaterialInstanceDynamic* ACPP_Grid::CreatMaterialInstance(const FLinearColor InColour, const float InOpacity)
 {
-	UMaterialInstanceDynamic* MatInst;
-	UMaterialInstanceDynamic::Create(MatInst, this);
+	UMaterialInstanceDynamic* MatInst = UMaterialInstanceDynamic::Create(Material, NULL);
 
 	MatInst->SetVectorParameterValue(FName("Colour"), InColour);
 	MatInst->SetScalarParameterValue(FName("Opacity"), InOpacity);
@@ -96,27 +45,34 @@ UMaterialInstanceDynamic* ACPP_Grid::CreatMaterialInstance(const FLinearColor In
 	return MatInst;
 }
 
-void ACPP_Grid::CreateLine(FVector InStart, FVector InEnd, float InThickness, TArray<FVector>* InVertices, TArray<int32>* InTriangles)
+void ACPP_Grid::CreateLine(FVector InStart, FVector InEnd, float InThickness, TArray<FVector>& InVertices, TArray<int32>& InTriangles)
 {
 	const float HalfThickness = InThickness / 2;
-	const FVector ThicknessDirection = FVector::CrossProduct((InEnd - InStart).Normalize(0.0001), FVector(0, 0, 1));
+	const FVector yep = FVector((InEnd - InStart).Normalize(0.0001));
+	const FVector yep2 = (InEnd - InStart).GetSafeNormal(0.0001, FVector::Zero());
+	const FVector ThicknessDirection = FVector::CrossProduct(yep2, FVector(0, 0, 1));
 	const FVector FacingThickness = ThicknessDirection * HalfThickness;
-	const int32 InVerticeCount = InVertices->Num();
+	const int32 InVerticeCount = InVertices.Num();
 	
+	TArray<FVector> TempVertices;
+	TArray<int32> TempTriangles;
 
 	// Add triangle points for single tile
-	InTriangles->Add(InVerticeCount + 2);
-	InTriangles->Add(InVerticeCount + 1);
-	InTriangles->Add(InVerticeCount + 0);
-	InTriangles->Add(InVerticeCount + 2);
-	InTriangles->Add(InVerticeCount + 3);
-	InTriangles->Add(InVerticeCount + 1);
+	TempTriangles.Add(InVerticeCount + 2);
+	TempTriangles.Add(InVerticeCount + 1);
+	TempTriangles.Add(InVerticeCount + 0);
+	TempTriangles.Add(InVerticeCount + 2);
+	TempTriangles.Add(InVerticeCount + 3);
+	TempTriangles.Add(InVerticeCount + 1);
 
 	// Add Vertices for triangles to face toward for single tile
-	InVertices->Add(InStart + FacingThickness);
-	InVertices->Add(InEnd	+ FacingThickness);
-	InVertices->Add(InStart - FacingThickness);
-	InVertices->Add(InEnd	- FacingThickness);
+	TempVertices.Add(InStart	+ FacingThickness);
+	TempVertices.Add(InEnd	+ FacingThickness);
+	TempVertices.Add(InStart	- FacingThickness);
+	TempVertices.Add(InEnd	- FacingThickness);
+
+	InVertices.Append(TempVertices);
+	InTriangles.Append(TempTriangles);
 }
 
 // Called every frame
@@ -152,6 +108,90 @@ float ACPP_Grid::GetGridWidth() const
 float ACPP_Grid::GetGridHeight() const
 {
 	return NumColumns * TileSize;
+}
+
+TArray<UProceduralMeshComponent*> ACPP_Grid::GetMoveMeshChildren() const
+{
+	TArray<USceneComponent*> TempMoveArray;
+	TArray<UProceduralMeshComponent*> MoveMeshArray;
+
+	MoveProceduralMeshParent->GetChildrenComponents(false, TempMoveArray);
+
+	for (USceneComponent* MoveMesh : TempMoveArray)
+	{
+		MoveMeshArray.Add(Cast<UProceduralMeshComponent>(MoveMesh));
+	}
+
+	return MoveMeshArray;
+}
+
+TArray<UProceduralMeshComponent*> ACPP_Grid::GetAttackMeshChildren() const
+{
+	TArray<USceneComponent*> TempAttackArray;
+	TArray<UProceduralMeshComponent*> MoveAttackArray;
+
+	AttackProceduralMeshParent->GetChildrenComponents(false, TempAttackArray);
+
+	for (USceneComponent* AttackMesh : TempAttackArray)
+	{
+		MoveAttackArray.Add(Cast<UProceduralMeshComponent>(AttackMesh));
+	}
+
+	return MoveAttackArray;
+}
+
+void ACPP_Grid::GenerateLineMeshData(TArray<FVector>& OutVertices, TArray<int32>& OutTriangles, UMaterialInstanceDynamic*& OutMaterial)
+{
+	OutMaterial = CreatMaterialInstance(LineColour, LineOpacity);
+
+	float LineStart;
+	const float LineHorizEnd = GetGridWidth();
+	const float LineVertiEnd = GetGridHeight();
+
+	UE_LOG(LogTemp, Display, TEXT("VerticeList Count before Lines: %d"), OutVertices.Num());
+
+	for (int i = 0; i <= NumRows; i++)
+	{
+		LineStart = i * TileSize;
+
+		CreateLine(FVector(LineStart, 0, 0), FVector(LineStart, LineHorizEnd, 0), LineThickness, OutVertices, OutTriangles);
+	}
+
+	UE_LOG(LogTemp, Display, TEXT("VerticeList Count MIDWAY Through Lines: %d"), OutVertices.Num());
+
+	// Create Vertical Lines Geometry
+
+	for (int i = 0; i <= NumColumns; i++)
+	{
+		LineStart = i * TileSize;
+
+		CreateLine(FVector(0, LineStart, 0), FVector(LineVertiEnd, LineStart, 0), LineThickness, OutVertices, OutTriangles);
+	}
+
+	UE_LOG(LogTemp, Display, TEXT("VerticeList Count AFTER Lines: %d"), OutVertices.Num());
+}
+
+void ACPP_Grid::GenerateTileMeshData(E_TileMeshType Type, TArray<FVector>& OutVertices, TArray<int32>& OutTriangles, UMaterialInstanceDynamic*& OutMaterial)
+{
+	const float TileHalfSize = TileSize / 2;
+
+	CreateLine(FVector(0, TileHalfSize, 0), FVector(TileSize, TileHalfSize, 0), TileSize, OutVertices, OutTriangles);
+	
+	switch (Type)
+	{
+		case E_TileMeshType::TMT_Select:
+		{
+			OutMaterial = OutMaterial = CreatMaterialInstance(SelectionColour, SelectionOpacity);
+		};
+		case E_TileMeshType::TMT_Move:
+		{
+			OutMaterial = OutMaterial = CreatMaterialInstance(MoveColour, MoveOpacity);
+		};
+		case E_TileMeshType::TMT_Attack:
+		{
+			OutMaterial = OutMaterial = CreatMaterialInstance(AttackColour, AttackOpacity);
+		};
+	}
 }
 
 bool ACPP_Grid::LocationToTile(const FVector Location, int32& OutRow, int32& OutColumn)

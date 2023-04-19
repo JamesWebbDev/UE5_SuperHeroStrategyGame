@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "ProceduralMeshComponent.h"
+#include "GenericEnums.h"
 #include "CPP_Grid.generated.h"
 
 UCLASS()
@@ -16,6 +17,8 @@ public:
 	// Sets default values for this actor's properties
 	ACPP_Grid();
 
+private:
+
 	
 
 protected:
@@ -25,7 +28,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "CPP|Structure")
 		USceneComponent* Scene;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "CPP|Structure")
+	
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "CPP|Testing")
 		UProceduralMeshComponent* LineProceduralMesh;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "CPP|Structure")
@@ -38,6 +43,9 @@ protected:
 		USceneComponent* AttackProceduralMeshParent;
 
 
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "CPP|Procedural Meshes")
+		UMaterialInterface* Material;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "CPP|Procedural Meshes")
 		TArray<UProceduralMeshComponent*> MeshMoveArray;
@@ -109,13 +117,25 @@ private:
 		UMaterialInstanceDynamic* CreatMaterialInstance(const FLinearColor InColour, const float InOpacity);
 
 	UFUNCTION(BlueprintCallable, Category = "CPP|Grid")
-		void CreateLine(FVector InStart, FVector InEnd, float InThickness, TArray<FVector>* InVertices, TArray<int32>* InTriangles);
+		void CreateLine(FVector InStart, FVector InEnd, float InThickness, TArray<FVector>& InVertices, TArray<int32>& InTriangles);
 
 	UFUNCTION(BlueprintPure, Category = "CPP|Constants")
 		float GetGridWidth() const;
 
 	UFUNCTION(BlueprintPure, Category = "CPP|Constants")
 		float GetGridHeight() const;
+
+	UFUNCTION(BlueprintPure, Category = "CPP|Constants")
+		TArray<UProceduralMeshComponent*> GetMoveMeshChildren() const;
+
+	UFUNCTION(BlueprintPure, Category = "CPP|Constants")
+		TArray<UProceduralMeshComponent*>  GetAttackMeshChildren() const;
+
+	UFUNCTION(BlueprintCallable, Category = "CPP|Procedural Meshes")
+		void GenerateLineMeshData(TArray<FVector>& OutVertices, TArray<int32>& OutTriangles, UMaterialInstanceDynamic*& OutMaterial);
+
+	UFUNCTION(BlueprintCallable, Category = "CPP|Procedural Meshes")
+		void GenerateTileMeshData(E_TileMeshType Type, TArray<FVector>& OutVertices, TArray<int32>& OutTriangles, UMaterialInstanceDynamic*& OutMaterial);
 
 public:	
 	// Called every frame

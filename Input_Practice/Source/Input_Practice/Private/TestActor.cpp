@@ -2,6 +2,7 @@
 
 
 #include "TestActor.h"
+#include "ProceduralMeshComponent.h"
 
 // Sets default values
 ATestActor::ATestActor()
@@ -11,9 +12,13 @@ ATestActor::ATestActor()
 
 	Scene = CreateDefaultSubobject<USceneComponent>(TEXT("Scene"));
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMesh"));
+	TestProceduralMesh = CreateDefaultSubobject<UProceduralMeshComponent>(TEXT("TestMesh"));
 
 	Scene->SetupAttachment(GetRootComponent());
 	Mesh->SetupAttachment(Scene);
+	TestProceduralMesh->SetupAttachment(Scene);
+
+	TestProceduralMesh->CreateMeshSection(0, TestVertices, TestTriangles, TArray<FVector>(), TArray<FVector2D>(), TArray<FColor>(), TArray<FProcMeshTangent>(), false);
 
 	Speed		   = 50;
 	Max			   = 200;
@@ -80,7 +85,7 @@ void ATestActor::Tick(float DeltaTime)
 
 	if (CurrentZ > MaxHeight) {
 		bIsUp = false;
-		Explode();
+		//Explode();
 	}
 	else if (CurrentZ < MinHeight) {
 		bIsUp = true;

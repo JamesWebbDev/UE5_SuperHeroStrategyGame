@@ -21,3 +21,11 @@ enum class E_PlayerActions : uint8
 	PA_Move UMETA(DisplayName = "Move"),
 	PA_Attack UMETA(DisplayName = "Attack"),
 };
+
+UENUM(BlueprintType)
+enum class E_TileMeshType : uint8
+{
+	TMT_Select UMETA(DisplayName = "Select"),
+	TMT_Move UMETA(DisplayName = "Move"),
+	TMT_Attack UMETA(DisplayName = "Attack"),
+};

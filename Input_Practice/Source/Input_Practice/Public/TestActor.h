@@ -4,7 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+
 #include "TestActor.generated.h"
+
+class UProceduralMeshComponent;
 
 UCLASS()
 class INPUT_PRACTICE_API ATestActor : public AActor
@@ -16,6 +19,16 @@ public:
 	ATestActor();
 
 protected:
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "CPP|Structure")
+		UProceduralMeshComponent* TestProceduralMesh;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (MakeEditWidget = true))
+		TArray<FVector> TestVertices;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+		TArray<int32> TestTriangles;
+
+
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 		USceneComponent* Scene;
