@@ -8,6 +8,8 @@
 #include "GenericEnums.h"
 #include "CPP_Grid.generated.h"
 
+class AAICharacter;
+
 UCLASS()
 class INPUT_PRACTICE_API ACPP_Grid : public AActor
 {
@@ -147,10 +149,35 @@ public:
 	UFUNCTION(BlueprintPure, Category = "CPP|Constants")
 		float GetTileSize() const;
 
-	UFUNCTION(BlueprintCallable, Category = "CPP")
+	UFUNCTION(BlueprintCallable, Category = "CPP|Tile")
 		bool LocationToTile(const FVector Location, int32& OutRow, int32& OutColumn);
 
-	UFUNCTION(BlueprintCallable, Category = "CPP")
+	UFUNCTION(BlueprintCallable, Category = "CPP|Tile")
 		bool TileToGridWorldLocation(const int32 InRow, const int32 InColumn, const bool GetCenter, FVector2D& OutGridLocation);
+
+	UFUNCTION(BlueprintCallable, Category = "CPP|Tile")
+		void SetHighlightedTilesState(E_PlayerActions Action, AAICharacter* InCharacter);
+
+	UFUNCTION(BlueprintCallable, Category = "CPP|Tile")
+		void SetTilePosition(UProceduralMeshComponent* Mesh, const FVector2D InTilePos, const FVector ActorLocation, const bool IsExtraTile);
+
+	UFUNCTION(BlueprintCallable, Category = "CPP|Tile")
+		void SetSelectedTileState(bool NewValue);
+
+	UFUNCTION(BlueprintCallable, Category = "CPP|Tile")
+		void SetSelectedTilePosition(int32 InRow, int32 InColumn);
+
+	UFUNCTION(BlueprintCallable, Category = "CPP|Tile")
+		void SetMoveableTilesState(bool NewValue);
+
+	UFUNCTION(BlueprintCallable, Category = "CPP|Tile")
+		void SetMoveableTilesPositions(TArray<FVector2D> InGridLocations);
+
+	UFUNCTION(BlueprintCallable, Category = "CPP|Tile")
+		void SetAttackableTilesState(bool NewValue);
+
+	UFUNCTION(BlueprintCallable, Category = "CPP|Tile")
+		void SetAttackableTilesPositions(TArray<FVector2D> InGridLocations);
+
 
 };

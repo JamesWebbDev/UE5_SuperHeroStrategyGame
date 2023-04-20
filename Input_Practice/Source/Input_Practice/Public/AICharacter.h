@@ -99,6 +99,17 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	// Blueprint Events
+
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "CPP|Grid")
+		void ActivateMoveableTiles();
+
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "CPP|Grid")
+		void ActivateAttackableTiles();
+
+	// Functions
+
+
 	UFUNCTION(BlueprintPure, Category = "CPP|Constants")
 		int32 GetPlayerIndex() const;
 
