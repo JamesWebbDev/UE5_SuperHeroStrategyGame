@@ -3,12 +3,12 @@
 
 #include "CPP_TopDownControllerPlayer.h"
 
-int32 ACPP_TopDownControllerPlayer::GetPlayerIndex() const
+int32 ACPP_TopDownControllerPlayer::GetPlayerIndexCPP() const
 {
 	return PlayerIndex;
 }
 
-void ACPP_TopDownControllerPlayer::SetPlayerIndex(int32 NewIndex)
+void ACPP_TopDownControllerPlayer::SetPlayerIndexCPP(int32 NewIndex)
 {
 	PlayerIndex = NewIndex;
 }

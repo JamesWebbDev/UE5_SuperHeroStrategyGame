@@ -26,17 +26,20 @@ ACPP_Grid::ACPP_Grid()
 	MoveProceduralMeshParent->SetupAttachment(Scene);
 	AttackProceduralMeshParent->SetupAttachment(Scene);
 
-	MeshMoveArray = GetMoveMeshChildren();
-	MeshAttackArray = GetAttackMeshChildren();
+	//MeshMoveArray = GetMoveMeshChildren();
+	//MeshAttackArray = GetAttackMeshChildren();
 }
 
 // Called when the game starts or when spawned
 void ACPP_Grid::BeginPlay()
 {
 	Super::BeginPlay();
+
+	//MeshMoveArray = GetMoveMeshChildren();
+	//MeshAttackArray = GetAttackMeshChildren();
 }
 
-UMaterialInstanceDynamic* ACPP_Grid::CreatMaterialInstance(const FLinearColor InColour, const float InOpacity)
+UMaterialInstanceDynamic* ACPP_Grid::CreateMaterialInstance(const FLinearColor InColour, const float InOpacity)
 {
 	UMaterialInstanceDynamic* MatInst = UMaterialInstanceDynamic::Create(Material, NULL);
 
@@ -116,7 +119,7 @@ TArray<UProceduralMeshComponent*> ACPP_Grid::GetMoveMeshChildren() const
 	TArray<USceneComponent*> TempMoveArray;
 	TArray<UProceduralMeshComponent*> MoveMeshArray;
 
-	MoveProceduralMeshParent->GetChildrenComponents(false, TempMoveArray);
+	MoveProceduralMeshParent->GetChildrenComponents(true, TempMoveArray);
 
 	for (USceneComponent* MoveMesh : TempMoveArray)
 	{
@@ -131,7 +134,7 @@ TArray<UProceduralMeshComponent*> ACPP_Grid::GetAttackMeshChildren() const
 	TArray<USceneComponent*> TempAttackArray;
 	TArray<UProceduralMeshComponent*> MoveAttackArray;
 
-	AttackProceduralMeshParent->GetChildrenComponents(false, TempAttackArray);
+	AttackProceduralMeshParent->GetChildrenComponents(true, TempAttackArray);
 
 	for (USceneComponent* AttackMesh : TempAttackArray)
 	{
@@ -143,7 +146,7 @@ TArray<UProceduralMeshComponent*> ACPP_Grid::GetAttackMeshChildren() const
 
 void ACPP_Grid::GenerateLineMeshData(TArray<FVector>& OutVertices, TArray<int32>& OutTriangles, UMaterialInstanceDynamic*& OutMaterial)
 {
-	OutMaterial = CreatMaterialInstance(LineColour, LineOpacity);
+	OutMaterial = CreateMaterialInstance(LineColour, LineOpacity);
 
 	float LineStart;
 	const float LineHorizEnd = GetGridWidth();
@@ -172,26 +175,29 @@ void ACPP_Grid::GenerateLineMeshData(TArray<FVector>& OutVertices, TArray<int32>
 	UE_LOG(LogTemp, Display, TEXT("VerticeList Count AFTER Lines: %d"), OutVertices.Num());
 }
 
-void ACPP_Grid::GenerateTileMeshData(E_TileMeshType Type, TArray<FVector>& OutVertices, TArray<int32>& OutTriangles, UMaterialInstanceDynamic*& OutMaterial)
+void ACPP_Grid::GenerateTileMeshData(TArray<FVector>& OutVertices, TArray<int32>& OutTriangles)
 {
 	const float TileHalfSize = TileSize / 2;
 
 	CreateLine(FVector(0, TileHalfSize, 0), FVector(TileSize, TileHalfSize, 0), TileSize, OutVertices, OutTriangles);
-	
-	switch (Type)
+}
+
+void ACPP_Grid::GenerateTileMaterial(E_TileMeshType InType, UMaterialInstanceDynamic*& OutMaterial)
+{
+	switch (InType)
 	{
 		case E_TileMeshType::TMT_Select:
 		{
-			OutMaterial = OutMaterial = CreatMaterialInstance(SelectionColour, SelectionOpacity);
-		};
+			OutMaterial = CreateMaterialInstance(SelectionColour, SelectionOpacity);
+		} break;
 		case E_TileMeshType::TMT_Move:
 		{
-			OutMaterial = OutMaterial = CreatMaterialInstance(MoveColour, MoveOpacity);
-		};
+			OutMaterial = CreateMaterialInstance(MoveColour, MoveOpacity);
+		} break;
 		case E_TileMeshType::TMT_Attack:
 		{
-			OutMaterial = OutMaterial = CreatMaterialInstance(AttackColour, AttackOpacity);
-		};
+			OutMaterial = CreateMaterialInstance(AttackColour, AttackOpacity);
+		} break;
 	}
 }
 
@@ -232,7 +238,7 @@ void ACPP_Grid::SetHighlightedTilesState(E_PlayerActions Action, AAICharacter* I
 			{
 				InCharacter->ActivateMoveableTiles();
 			}
-		};
+		} break;
 		case E_PlayerActions::PA_Attack:
 		{
 			SetMoveableTilesState(false);
@@ -242,7 +248,7 @@ void ACPP_Grid::SetHighlightedTilesState(E_PlayerActions Action, AAICharacter* I
 			{
 				InCharacter->ActivateAttackableTiles();
 			}
-		};
+		} break;
 	}
 }
 
@@ -287,7 +293,7 @@ void ACPP_Grid::SetSelectedTilePosition(int32 InRow, int32 InColumn)
 
 	float ZLocation = GetActorLocation().Z + 10;
 
-	Scene->SetWorldLocation(FVector(OutLocation.X, OutLocation.Y, ZLocation), false, false);
+	SelectionProceduralMesh->SetWorldLocation(FVector(OutLocation.X, OutLocation.Y, ZLocation), false, false);
 }
 
 void ACPP_Grid::SetMoveableTilesState(bool NewValue)
@@ -303,6 +309,12 @@ void ACPP_Grid::SetMoveableTilesState(bool NewValue)
 
 void ACPP_Grid::SetMoveableTilesPositions(TArray<FVector2D> InGridLocations)
 {
+	if (MeshMoveArray.Num() <= 0)
+	{
+		UE_LOG(LogTemp, Error, TEXT("There are NO Meshes in Move Array!!!"));
+		return;
+	}
+
 	if (!HighlightMoveableTiles)
 	{
 		for (int i = 0; i <= NumMoveMeshes; i++)
@@ -324,10 +336,15 @@ void ACPP_Grid::SetMoveableTilesPositions(TArray<FVector2D> InGridLocations)
 		return;
 	}
 
+	UE_LOG(LogTemp, Warning, TEXT("Number of tiles trying to be displayed: %d!"), InGridLocations.Num());
+
 	for (int i = 0; i <= NumMoveMeshes; i++)
 	{
 		UProceduralMeshComponent* Mesh = MeshMoveArray[i];
-		SetTilePosition(Mesh, InGridLocations[i], ActorLocation, i >= LocationCount);
+		bool DoesIndexExceedLocationCount = i >= LocationCount;
+		FVector2D GridLocation = DoesIndexExceedLocationCount ? FVector2D::Zero() : InGridLocations[i];
+
+		SetTilePosition(Mesh, GridLocation, ActorLocation, i >= LocationCount);
 	}
 
 }
@@ -345,10 +362,20 @@ void ACPP_Grid::SetAttackableTilesState(bool NewValue)
 
 void ACPP_Grid::SetAttackableTilesPositions(TArray<FVector2D> InGridLocations)
 {
+	if (MeshAttackArray.Num() <= 0)
+	{
+		UE_LOG(LogTemp, Error, TEXT("There are NO Meshes in Attack Array!!!"));
+		return;
+	}
+
+
 	if (!HighlightAttackableTiles)
 	{
 		for (int i = 0; i <= NumAttackMeshes; i++)
 		{
+			if (MeshAttackArray[i] == NULL)
+				continue;
+
 			if (UProceduralMeshComponent* Mesh = MeshAttackArray[i])
 			{
 				Mesh->SetVisibility(false, false);
@@ -369,7 +396,10 @@ void ACPP_Grid::SetAttackableTilesPositions(TArray<FVector2D> InGridLocations)
 	for (int i = 0; i <= NumAttackMeshes; i++)
 	{
 		UProceduralMeshComponent* Mesh = MeshAttackArray[i];
-		SetTilePosition(Mesh, InGridLocations[i], ActorLocation, i >= LocationCount);
+		bool DoesIndexExceedLocationCount = i >= LocationCount;
+		FVector2D GridLocation = DoesIndexExceedLocationCount ? FVector2D::Zero() : InGridLocations[i];
+
+		SetTilePosition(Mesh, GridLocation, ActorLocation, DoesIndexExceedLocationCount);
 	}
 }
 

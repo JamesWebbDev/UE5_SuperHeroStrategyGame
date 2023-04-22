@@ -32,7 +32,7 @@ protected:
 
 	
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "CPP|Testing")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "CPP|Structure")
 		UProceduralMeshComponent* LineProceduralMesh;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "CPP|Structure")
@@ -49,10 +49,10 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "CPP|Procedural Meshes")
 		UMaterialInterface* Material;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "CPP|Procedural Meshes")
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "CPP|Arrays")
 		TArray<UProceduralMeshComponent*> MeshMoveArray;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "CPP|Procedural Meshes")
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "CPP|Arrays")
 		TArray<UProceduralMeshComponent*> MeshAttackArray;
 
 	
@@ -116,7 +116,7 @@ protected:
 private: 
 
 	UFUNCTION(BlueprintCallable, Category = "CPP|Grid")
-		UMaterialInstanceDynamic* CreatMaterialInstance(const FLinearColor InColour, const float InOpacity);
+		UMaterialInstanceDynamic* CreateMaterialInstance(const FLinearColor InColour, const float InOpacity);
 
 	UFUNCTION(BlueprintCallable, Category = "CPP|Grid")
 		void CreateLine(FVector InStart, FVector InEnd, float InThickness, TArray<FVector>& InVertices, TArray<int32>& InTriangles);
@@ -137,12 +137,15 @@ private:
 		void GenerateLineMeshData(TArray<FVector>& OutVertices, TArray<int32>& OutTriangles, UMaterialInstanceDynamic*& OutMaterial);
 
 	UFUNCTION(BlueprintCallable, Category = "CPP|Procedural Meshes")
-		void GenerateTileMeshData(E_TileMeshType Type, TArray<FVector>& OutVertices, TArray<int32>& OutTriangles, UMaterialInstanceDynamic*& OutMaterial);
+		void GenerateTileMeshData(TArray<FVector>& OutVertices, TArray<int32>& OutTriangles);
+
+	UFUNCTION(BlueprintCallable, Category = "CPP|Procedural Meshes")
+		void GenerateTileMaterial(E_TileMeshType InType, UMaterialInstanceDynamic*& OutMaterial);
 
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
+	
 	UFUNCTION(BlueprintPure, Category = "CPP|Constants")
 		bool IsTileValid(int32 Row, int32 Column) const;
 

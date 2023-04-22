@@ -21,8 +21,8 @@ private:
 public: 
 
 	UFUNCTION(BlueprintPure, Category = "CPP")
-		int32 GetPlayerIndex() const;
+		int32 GetPlayerIndexCPP() const;
 
 	UFUNCTION(BlueprintCallable, Category = "CPP")
-		void SetPlayerIndex(int32 NewIndex);
+		void SetPlayerIndexCPP(int32 NewIndex);
 };

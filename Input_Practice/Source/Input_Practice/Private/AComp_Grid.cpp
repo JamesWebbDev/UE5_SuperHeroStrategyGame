@@ -29,10 +29,10 @@ void UAComp_Grid::BeginPlay()
 		return;
 	}
 
-	DirectionValues.Add(FVector2D(0, 1), E_CardinalDirection::CD_Up);
-	DirectionValues.Add(FVector2D(1, 0), E_CardinalDirection::CD_Right);
-	DirectionValues.Add(FVector2D(0, -1), E_CardinalDirection::CD_Down);
-	DirectionValues.Add(FVector2D(-1, 0), E_CardinalDirection::CD_Left);
+	//DirectionValues.Add(FVector2D(0, 1), E_CardinalDirection::CD_Up);
+	//DirectionValues.Add(FVector2D(1, 0), E_CardinalDirection::CD_Right);
+	//DirectionValues.Add(FVector2D(0, -1), E_CardinalDirection::CD_Down);
+	//DirectionValues.Add(FVector2D(-1, 0), E_CardinalDirection::CD_Left);
 
 	SetGridPosition(GetCurrentLocationAtTile());
 	SetWorldPositionFromGridPosition();
@@ -105,7 +105,8 @@ void UAComp_Grid::SetWorldPositionFromCurrentPosition()
 
 void UAComp_Grid::GetAttackableTiles(TArray<FVector2D> AffectedTiles_UpDir, FVector MousePosition, TArray<FVector2D>& OutTiles)
 {
-	const FVector2D MouseLookDirection = (FVector2D)(MousePosition - (Owner->GetActorLocation())).Normalize();
+	const FVector MouseLookDirection = MousePosition - (Owner->GetActorLocation());
+	const FVector2D LookDir2D = (FVector2D)MouseLookDirection.GetSafeNormal2D(0.0001, FVector::Zero());
 	float ClosestDot = -2;
 	FVector2D ClosestDir;
 
@@ -114,7 +115,7 @@ void UAComp_Grid::GetAttackableTiles(TArray<FVector2D> AffectedTiles_UpDir, FVec
 
 	for (FVector2D Dir : DirKeys)
 	{
-		float Dot = Dir.Dot(MouseLookDirection);
+		float Dot = FVector2D::DotProduct(LookDir2D, Dir);
 
 		if (Dot > ClosestDot)
 		{
@@ -123,7 +124,6 @@ void UAComp_Grid::GetAttackableTiles(TArray<FVector2D> AffectedTiles_UpDir, FVec
 		}
 	}
 
-
 	if (E_CardinalDirection* DirRef = DirectionValues.Find(ClosestDir))
 	{
 		E_CardinalDirection& Dir = *DirRef;
@@ -131,7 +131,7 @@ void UAComp_Grid::GetAttackableTiles(TArray<FVector2D> AffectedTiles_UpDir, FVec
 	}
 }
 
-void UAComp_Grid::GetSurroundingTiles(int32 Range, bool UseCurrentPosAsOrigin, TSet<FVector2D>& OutTiles)
+void UAComp_Grid::GetSurroundingTiles(int32 Range, bool UseCurrentPosAsOrigin, TArray<FVector2D>& OutTiles)
 {
 	const FVector2D Origin = UseCurrentPosAsOrigin ? GetCurrentLocationAtTile() : GridPosition;
 	const int32 NegativeRange = Range * -1;
@@ -144,7 +144,7 @@ void UAComp_Grid::GetSurroundingTiles(int32 Range, bool UseCurrentPosAsOrigin, T
 			FVector2D TempGridPos = FVector2D(Origin.X + X, Origin.Y + Y);
 			float Distance = FVector2D::Distance(TempGridPos, Origin);
 
-			if (Distance > 0 && Distance <= Range) 
+			if (Distance > 0 && Distance <= Range + (Range / 10))
 			{
 				OutTiles.Add(TempGridPos);
 			}
@@ -159,27 +159,30 @@ TArray<FVector2D> UAComp_Grid::RotatePositionsThenApplyOrigin(TArray<FVector2D> 
 
 	for (FVector2D Tile : TilePositions) 
 	{
+		float TempX = Tile.X;
+
 		switch (RotateDirection)
 		{
 			case E_CardinalDirection::CD_Up: 
 			{
-
-			};
+				Tile.X = Tile.Y;
+				Tile.Y = TempX * -1;
+			} break;
 			case E_CardinalDirection::CD_Down:
+			{
+				Tile.X = Tile.Y * -1;
+				Tile.Y = TempX;
+			} break;
+			case E_CardinalDirection::CD_Right:
+			{
+				Tile.X = Tile.X;
+				Tile.Y = Tile.Y;
+			} break;
+			case E_CardinalDirection::CD_Left:
 			{
 				Tile.X = Tile.X * -1;
 				Tile.Y = Tile.Y * -1;
-			};
-			case E_CardinalDirection::CD_Right:
-			{
-				Tile.X = Tile.Y;
-				Tile.Y = Tile.X * -1;
-			};
-			case E_CardinalDirection::CD_Left:
-			{
-				Tile.X = Tile.Y * -1;
-				Tile.Y = Tile.X;
-			};
+			} break;
 		}
 
 		Tile += Origin;

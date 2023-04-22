@@ -67,7 +67,7 @@ void ACPP_TopDownGameState::SetAllCharacterOwners()
 	{
 		for (ACPP_TopDownControllerPlayer* Player : Players)
 		{
-			int32 PIndex = Player->GetPlayerIndex();
+			int32 PIndex = Player->GetPlayerIndexCPP();
 			int32 CIndex = Character->GetPlayerIndex();
 
 			if (PIndex == CIndex) 
