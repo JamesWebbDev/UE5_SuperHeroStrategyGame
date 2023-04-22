@@ -28,7 +28,7 @@ int32 UDA_Attack::GetAttackRange() const
 	return AttackRange;
 }
 
-bool UDA_Attack::GetisAOE() const
+bool UDA_Attack::GetIsAOE() const
 {
 	return IsAOE;
 }

@@ -59,7 +59,7 @@ public:
 		int32 GetAttackRange() const;
 
 	UFUNCTION(BlueprintPure, Category = "CPP|Constants")
-		bool GetisAOE() const;
+		bool GetIsAOE() const;
 
 	UFUNCTION(BlueprintPure, Category = "CPP|Constants")
 		TArray<FVector2D> GetAttackTiles() const;

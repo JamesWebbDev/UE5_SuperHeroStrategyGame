@@ -65,7 +65,7 @@ void UAComp_Attack::GetAttackVariables(int32& OutDamage, bool& OutIsAOE, int32& 
 	}
 
 	OutDamage = SelectedAttack->GetDamage();
-	OutIsAOE = SelectedAttack->GetisAOE();
+	OutIsAOE = SelectedAttack->GetIsAOE();
 	OutAttackRange = SelectedAttack->GetAttackRange();
 	OutAttackTiles = SelectedAttack->GetAttackTiles();
 }

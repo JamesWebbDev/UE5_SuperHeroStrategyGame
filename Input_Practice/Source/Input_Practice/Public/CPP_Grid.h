@@ -153,6 +153,9 @@ public:
 		float GetTileSize() const;
 
 	UFUNCTION(BlueprintCallable, Category = "CPP|Tile")
+		bool VectorToTile(FVector InWorldPosition, FVector& OutWorldPosition, FVector2D& OutGridPosition);
+
+	UFUNCTION(BlueprintCallable, Category = "CPP|Tile")
 		bool LocationToTile(const FVector Location, int32& OutRow, int32& OutColumn);
 
 	UFUNCTION(BlueprintCallable, Category = "CPP|Tile")

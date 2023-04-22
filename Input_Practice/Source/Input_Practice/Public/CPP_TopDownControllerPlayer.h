@@ -15,8 +15,14 @@ class INPUT_PRACTICE_API ACPP_TopDownControllerPlayer : public APlayerController
 	GENERATED_BODY()
 	
 private:
+
 	UPROPERTY(VisibleAnywhere, Category = "CPP")
 		int32 PlayerIndex;
+
+protected: 
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "CPP")
+		float RotateSensitivity;
 
 public: 
 

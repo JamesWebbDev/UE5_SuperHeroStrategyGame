@@ -25,18 +25,12 @@ ACPP_Grid::ACPP_Grid()
 	SelectionProceduralMesh->SetupAttachment(Scene);
 	MoveProceduralMeshParent->SetupAttachment(Scene);
 	AttackProceduralMeshParent->SetupAttachment(Scene);
-
-	//MeshMoveArray = GetMoveMeshChildren();
-	//MeshAttackArray = GetAttackMeshChildren();
 }
 
 // Called when the game starts or when spawned
 void ACPP_Grid::BeginPlay()
 {
 	Super::BeginPlay();
-
-	//MeshMoveArray = GetMoveMeshChildren();
-	//MeshAttackArray = GetAttackMeshChildren();
 }
 
 UMaterialInstanceDynamic* ACPP_Grid::CreateMaterialInstance(const FLinearColor InColour, const float InOpacity)
@@ -102,6 +96,27 @@ bool ACPP_Grid::IsTileValid(int32 Row, int32 Column) const
 float ACPP_Grid::GetTileSize() const
 {
 	return TileSize;
+}
+
+bool ACPP_Grid::VectorToTile(FVector InWorldPosition, FVector& OutWorldPosition, FVector2D& OutGridPosition)
+{
+	int32 Row, Column;
+	OutWorldPosition = FVector::Zero();
+	OutGridPosition = FVector2D::Zero();
+
+	const bool IsValidTile = LocationToTile(InWorldPosition, Row, Column);
+
+	if (!IsValidTile)
+	{
+		return false;
+	}
+
+	FVector2D WorldPos;
+	const bool IsValidPosition = TileToGridWorldLocation(Row, Column, true, WorldPos);
+
+	OutWorldPosition = FVector(WorldPos.X, WorldPos.Y, 0);
+	OutGridPosition = FVector2D(Row, Column);
+	return IsValidPosition;
 }
 
 float ACPP_Grid::GetGridWidth() const

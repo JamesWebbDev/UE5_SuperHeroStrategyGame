@@ -80,7 +80,7 @@ void ACPP_TopDownGameState::SetAllCharacterOwners()
 	
 }
 
-TArray<AAICharacter*> ACPP_TopDownGameState::GetAPlayersCharacters(int32 PlayerIndex)
+TArray<AAICharacter*> ACPP_TopDownGameState::GetCharactersOwnedByPlayers(int32 PlayerIndex)
 {
 	TArray<AAICharacter*> MatchingCharacters;
 

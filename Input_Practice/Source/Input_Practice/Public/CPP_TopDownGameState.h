@@ -36,7 +36,7 @@ public:
 		void SetAllCharacterOwners();
 
 	UFUNCTION(BlueprintCallable, Category = "CPP")
-		TArray<AAICharacter*> GetAPlayersCharacters(int32 PlayerIndex);
+		TArray<AAICharacter*> GetCharactersOwnedByPlayers(int32 PlayerIndex);
 
 	UFUNCTION(BlueprintCallable, Category = "CPP")
 		bool GetCharacterAtGridPosition(FVector2D Position2D, AAICharacter*& FoundCharacter);
