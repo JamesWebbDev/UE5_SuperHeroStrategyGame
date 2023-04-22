@@ -32,7 +32,7 @@ void AAICharacter::BeginPlay()
 		return;
 	}
 
-	OwningPlayer = Cast<ACPP_TopDownControllerPlayer>(GetWorld()->GetFirstPlayerController());
+	OwningGridUser = Cast<ACPP_TopDownControllerPlayer>(GetWorld()->GetFirstPlayerController());
 }
 
 void AAICharacter::MoveToDestination()
@@ -72,7 +72,9 @@ void AAICharacter::SetIsAtDestination(bool NewValue)
 	if (IsAtDestination == true)
 	{
 		GridComponent->SetWorldPositionFromCurrentPosition();
-		OnActionConcluded.Broadcast();
+
+		if (OnActionConcluded.IsBound())
+			OnActionConcluded.Broadcast();
 	}
 }
 
@@ -155,6 +157,11 @@ void AAICharacter::SetHasActedThisRotation(bool NewValue)
 	{
 		GridComponent->SetGridPosition(GridComponent->GetCurrentLocationAtTile());
 	}
+}
+
+void AAICharacter::SetOwningGridUser(ACPP_TopDownControllerPlayer* InGridUser)
+{
+	OwningGridUser = InGridUser;
 }
 
 

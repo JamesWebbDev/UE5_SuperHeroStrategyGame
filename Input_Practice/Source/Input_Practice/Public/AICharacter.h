@@ -34,7 +34,7 @@ public:
 		ACPP_TopDownGameState* TDGameState;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "CPP|References")
-		ACPP_TopDownControllerPlayer* OwningPlayer;
+		ACPP_TopDownControllerPlayer* OwningGridUser;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "CPP|Components")
 		UAComp_Grid* GridComponent;
@@ -75,7 +75,7 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "CPP|Movement")
 		bool  IsAtDestination;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "CPP|Gameplay")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "CPP|Gameplay")
 		int32 PlayerIndex;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "CPP|Gameplay")
@@ -128,5 +128,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "CPP|Gameplay")
 		void SetHasActedThisRotation(bool NewValue);
 
+	UFUNCTION(BlueprintCallable, Category = "CPP|Gameplay")
+		void SetOwningGridUser(ACPP_TopDownControllerPlayer* InGridUser);
 
 };

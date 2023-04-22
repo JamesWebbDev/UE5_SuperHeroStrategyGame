@@ -51,6 +51,8 @@ bool UAComp_Health::GetisDead() const
 void UAComp_Health::TakeDamage(int32 Damage)
 {
 	CurrentHealth -= Damage;
+
+	OnHealthChanged();
 }
 
 void UAComp_Health::OnHealthChanged()
@@ -58,12 +60,13 @@ void UAComp_Health::OnHealthChanged()
 	if (OnHit.IsBound())
 	{
 		OnHit.Broadcast();
-		UE_LOG(LogTemp, Display, TEXT("Successfully triggered bound OnHit Delegate."));
+		UE_LOG(LogTemp, Warning, TEXT("Successfully triggered bound OnHit Delegate."));
 	}
 
 	if (CurrentHealth <= 0) 
 	{
 		IsDead = true;
+		OnIsDeadChanged();
 	}
 }
 

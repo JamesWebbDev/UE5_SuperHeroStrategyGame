@@ -99,6 +99,8 @@ TArray<AAICharacter*> ACPP_TopDownGameState::GetAPlayersCharacters(int32 PlayerI
 
 bool ACPP_TopDownGameState::GetCharacterAtGridPosition(FVector2D Position2D, AAICharacter*& FoundCharacter)
 {
+	FoundCharacter = nullptr;
+
 	for (AAICharacter* Character : CharacterList)
 	{
 		FVector2D CharPosition = Character->GridComponent->GetCurrentGridPosition();
@@ -137,8 +139,18 @@ AAICharacter* ACPP_TopDownGameState::GetNextActiveCharacter()
 
 	}
 
+	if (NextCharacter != nullptr)
+	{
+		return NextCharacter;
+	}
+
+	for (AAICharacter* Character : CharacterList)
+	{
+		Character->SetHasActedThisRotation(false);
+	}
+
 	// Update This part of the code to reset HasActed bools and restart function
-	return NextCharacter;
+	return GetNextActiveCharacter();
 }
 
 

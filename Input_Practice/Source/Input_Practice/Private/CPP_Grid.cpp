@@ -336,8 +336,6 @@ void ACPP_Grid::SetMoveableTilesPositions(TArray<FVector2D> InGridLocations)
 		return;
 	}
 
-	UE_LOG(LogTemp, Warning, TEXT("Number of tiles trying to be displayed: %d!"), InGridLocations.Num());
-
 	for (int i = 0; i <= NumMoveMeshes; i++)
 	{
 		UProceduralMeshComponent* Mesh = MeshMoveArray[i];
