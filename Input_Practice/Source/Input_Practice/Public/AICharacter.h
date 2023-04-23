@@ -7,6 +7,7 @@
 #include "AComp_Grid.h"
 #include "AComp_Health.h"
 #include "AComp_Attack.h"
+#include "AComp_GridUser.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "AICharacter.generated.h"
 
@@ -34,7 +35,7 @@ public:
 		ACPP_TopDownGameState* TDGameState;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "CPP|References")
-		ACPP_TopDownControllerPlayer* OwningGridUser;
+		UAComp_GridUser* OwningUser;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "CPP|Components")
 		UAComp_Grid* GridComponent;
@@ -44,6 +45,8 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "CPP|Components")
 		UAComp_Attack* AttackComponent;
+
+	
 
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintAssignable, Category = "CPP|Events")
@@ -66,6 +69,7 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "CPP|Movement", meta = (ToolTip = "Defines the distance from the destination needed to start walking."))
 		int32 WalkDistance;
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "CPP|Movement", meta = (ToolTip = "Distance to which player snaps to destination."))
 		int32 SnapDistance;
 
@@ -75,11 +79,15 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "CPP|Movement")
 		bool  IsAtDestination;
 
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "CPP|Gameplay")
 		int32 PlayerIndex;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "CPP|Gameplay")
 		bool  HasActedThisRotation;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "CPP|Gameplay")
+		bool  IsOwnerLocalPlayerController;
 
 
 protected:
@@ -107,6 +115,23 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "CPP|Grid")
 		void ActivateAttackableTiles();
 
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "CPP|Turn Flow")
+		void AttackPositions(const TArray<FVector2D>& AttackedTiles, const int32 Damage);
+
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "CPP|BP Accessible")
+		void PrepareToStartAttack(const UDA_Attack* InAttack, const FVector InputPos);
+
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "CPP|BP Accessible")
+		void PrepareToStopAttack();
+
+	// Networked Events
+
+	UFUNCTION(BlueprintCallable, NetMulticast, Reliable, Category = "CPP|Turn Flow")
+		void Event_MultiRPC_ActionTaken(const bool InHasActed);
+
+	UFUNCTION(BlueprintCallable, NetMulticast, Reliable, Category = "CPP|Turn Flow")
+		void Event_MultiRPC_SetTargetPosition(const FVector NewPosition);
+
 	// Functions
 
 
@@ -129,6 +154,9 @@ public:
 		void SetHasActedThisRotation(bool NewValue);
 
 	UFUNCTION(BlueprintCallable, Category = "CPP|Gameplay")
-		void SetOwningGridUser(ACPP_TopDownControllerPlayer* InGridUser);
+		void SetOwningUser(AActor* InUser);
+
+	UFUNCTION(BlueprintCallable, Category = "CPP|Gameplay")
+		void SetIsOwnerLocalPlayerController(AActor* NewOwner);
 
 };

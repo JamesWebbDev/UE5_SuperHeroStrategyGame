@@ -32,7 +32,7 @@ void AAICharacter::BeginPlay()
 		return;
 	}
 
-	OwningGridUser = Cast<ACPP_TopDownControllerPlayer>(GetWorld()->GetFirstPlayerController());
+	//OwningUser = ;
 }
 
 void AAICharacter::MoveToDestination()
@@ -91,6 +91,18 @@ void AAICharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+}
+
+
+void AAICharacter::Event_MultiRPC_ActionTaken_Implementation(bool InHasActed)
+{
+	SetHasActedThisRotation(InHasActed);
+}
+
+void AAICharacter::Event_MultiRPC_SetTargetPosition_Implementation(FVector NewPosition)
+{
+	TargetDestination = NewPosition;
+	IsAtDestination = false;
 }
 
 int32 AAICharacter::GetPlayerIndex() const
@@ -159,10 +171,28 @@ void AAICharacter::SetHasActedThisRotation(bool NewValue)
 	}
 }
 
-void AAICharacter::SetOwningGridUser(ACPP_TopDownControllerPlayer* InGridUser)
+void AAICharacter::SetOwningUser(AActor* InUser)
 {
-	OwningGridUser = InGridUser;
+	OwningUser = InUser->FindComponentByClass<UAComp_GridUser>();
+
+	//UE_LOG(LogTemp, Warning, TEXT("WAS CAST TO GRIDUSER INVALID ON SET? %s"), OwningUser == nullptr);
+
+	SetIsOwnerLocalPlayerController(InUser);
 }
+
+void AAICharacter::SetIsOwnerLocalPlayerController(AActor* NewOwner)
+{
+	AController* Control = Cast<AController>(NewOwner);
+
+	if (Control == nullptr || Control == NULL)
+	{
+		IsOwnerLocalPlayerController = false;
+		UE_LOG(LogTemp, Warning, TEXT("CAST TO IS LOCAL PLAYER CONTROLLER FAILED"));
+	}
+
+	IsOwnerLocalPlayerController = Control->IsLocalPlayerController();
+}
+
 
 
 

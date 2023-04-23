@@ -15,6 +15,7 @@
 void ACPP_TopDownGameState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(ACPP_TopDownGameState, GridUserList);
 	DOREPLIFETIME(ACPP_TopDownGameState, CharacterList);
 }
 
@@ -38,6 +39,60 @@ TArray<ACPP_TopDownControllerPlayer*>  ACPP_TopDownGameState::GetControllersTopD
 	return ControllerArray;
 }
 
+AActor* ACPP_TopDownGameState::GetUserByIndex(int32 InIndex) const
+{
+	if (InIndex >= GridUserList.Num())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("GameState does NOT have User in List at Index %d!!!"), InIndex);
+		return nullptr;
+	}
+
+	return GridUserList[InIndex];
+}
+
+void ACPP_TopDownGameState::SortGridUsersByIndex()
+{
+	const int Length = GridUserList.Num();
+	const TArray<AActor*> ListCopy = GridUserList;
+	TArray<int32> IndexArray;
+
+	for (int x = 0; x < Length; x++)
+	{
+		IndexArray.Add(IGridUser::Execute_GetGridUser(GridUserList[x])->GetUserIndex());
+	}
+
+
+	int i, j, temp, pass = 0;
+
+	for (i = 0; i < Length; i++) {
+		for (j = i + 1; j < Length; j++)
+		{
+			if (IndexArray[j] < IndexArray[i])
+			{
+				temp = IndexArray[i];
+				IndexArray[i] = IndexArray[j];
+				IndexArray[j] = temp;
+			}
+		}
+		pass++;
+	}
+
+	for (int y = 0; y < Length; y++)
+	{
+		GridUserList[y] = ListCopy[IndexArray[y]];
+	}
+}
+
+void ACPP_TopDownGameState::SetGridUsersList()
+{
+	TArray<AActor*> UserArray;
+
+	UGameplayStatics::GetAllActorsWithInterface(GetWorld(), UGridUser::StaticClass(), UserArray);
+
+	GridUserList = UserArray;
+	SortGridUsersByIndex();
+}
+
 void ACPP_TopDownGameState::InitialiseCharacters()
 {
 	TArray<AActor*> CharacterArray;
@@ -47,8 +102,6 @@ void ACPP_TopDownGameState::InitialiseCharacters()
 	{
 		CharacterList.Add(Cast<AAICharacter>(Actor));
 	}
-
-	
 }
 
 void ACPP_TopDownGameState::RemoveCharacterFromList(AAICharacter* Character)
@@ -61,23 +114,22 @@ void ACPP_TopDownGameState::RemoveCharacterFromList(AAICharacter* Character)
 
 void ACPP_TopDownGameState::SetAllCharacterOwners()
 {
-	TArray<ACPP_TopDownControllerPlayer*> Players = GetControllersTopDown();
+	SetGridUsersList();
 
 	for (AAICharacter* Character : CharacterList)
 	{
-		for (ACPP_TopDownControllerPlayer* Player : Players)
+		for (AActor* User : GridUserList)
 		{
-			int32 PIndex = Player->GetPlayerIndexCPP();
+			int32 UIndex = IGridUser::Execute_GetGridUser(User)->GetUserIndex();
 			int32 CIndex = Character->GetPlayerIndex();
 
-			if (PIndex == CIndex) 
+			if (UIndex == CIndex && Cast<ACPP_TopDownControllerPlayer>(User)) 
 			{
-				Character->SetOwner(Player);
+				Character->SetOwner(User);
+				Character->SetOwningUser(User);
 			}
 		}
 	}
-
-	
 }
 
 TArray<AAICharacter*> ACPP_TopDownGameState::GetCharactersOwnedByPlayers(int32 PlayerIndex)
@@ -146,7 +198,7 @@ AAICharacter* ACPP_TopDownGameState::GetNextActiveCharacter()
 
 	for (AAICharacter* Character : CharacterList)
 	{
-		Character->SetHasActedThisRotation(false);
+		Character->Event_MultiRPC_ActionTaken(false);
 	}
 
 	// Update This part of the code to reset HasActed bools and restart function

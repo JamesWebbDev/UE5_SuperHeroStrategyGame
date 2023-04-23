@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameState.h"
+#include "GridUser.h"
 #include "CPP_TopDownGameState.generated.h"
 
 // ------- FORWARD DECLARATIONS ---------
@@ -19,12 +20,24 @@ class INPUT_PRACTICE_API ACPP_TopDownGameState : public AGameState
 public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "CPP", Replicated)
+		TArray<AActor*> GridUserList;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "CPP", Replicated)
 	TArray<AAICharacter*> CharacterList;
 
 	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const;
 
 	UFUNCTION(BlueprintPure, Category = "CPP")
 		TArray<ACPP_TopDownControllerPlayer*> GetControllersTopDown() const;
+
+	UFUNCTION(BlueprintPure, Category = "CPP|Players")
+		AActor* GetUserByIndex(int32 InIndex) const;
+
+	UFUNCTION(BlueprintCallable, Category = "CPP|Players")
+		void SortGridUsersByIndex();
+
+	UFUNCTION(BlueprintCallable, Category = "CPP|Players")
+		void SetGridUsersList();
 
 	UFUNCTION(BlueprintCallable, Category = "CPP")
 		void InitialiseCharacters();

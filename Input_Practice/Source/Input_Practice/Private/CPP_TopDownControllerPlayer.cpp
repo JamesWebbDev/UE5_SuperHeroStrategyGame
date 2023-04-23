@@ -3,6 +3,11 @@
 
 #include "CPP_TopDownControllerPlayer.h"
 
+ACPP_TopDownControllerPlayer::ACPP_TopDownControllerPlayer()
+{
+	UserComponent = CreateDefaultSubobject<UAComp_GridUser>(TEXT("GridUserComponent"));
+}
+
 int32 ACPP_TopDownControllerPlayer::GetPlayerIndexCPP() const
 {
 	return PlayerIndex;

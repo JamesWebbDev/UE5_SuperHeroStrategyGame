@@ -24,6 +24,6 @@ class INPUT_PRACTICE_API IGridUser
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
 
-	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "CPP|Grid User") 
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "CPP|Grid User") 
 		UAComp_GridUser* GetGridUser() const;
 };
