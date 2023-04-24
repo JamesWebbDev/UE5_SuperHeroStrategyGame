@@ -5,6 +5,7 @@
 #include "Blueprint/AIBlueprintHelperLibrary.h"
 #include "CPP_TopDownGameState.h"
 #include "CPP_TopDownControllerPlayer.h"
+#include "Net/UnrealNetwork.h"
 
 
 // Sets default values
@@ -18,6 +19,13 @@ AAICharacter::AAICharacter()
 	AttackComponent = CreateDefaultSubobject<UAComp_Attack>(TEXT("AttackComponent"));
 
 }
+
+void AAICharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(AAICharacter, OwningUser);
+}
+
 
 // Called when the game starts or when spawned
 void AAICharacter::BeginPlay()

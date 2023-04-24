@@ -34,8 +34,10 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "CPP|References")
 		ACPP_TopDownGameState* TDGameState;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "CPP|References")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Replicated, Category = "CPP|References")
 		UAComp_GridUser* OwningUser;
+
+	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "CPP|Components")
 		UAComp_Grid* GridComponent;
@@ -108,6 +110,9 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	// Blueprint Events
+
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "CPP|Turn Flow")
+		void InitialiseGameValues(const AActor* InActor);
 
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "CPP|Grid")
 		void ActivateMoveableTiles();

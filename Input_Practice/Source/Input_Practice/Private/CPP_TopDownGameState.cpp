@@ -116,8 +116,10 @@ void ACPP_TopDownGameState::SetAllCharacterOwners()
 {
 	SetGridUsersList();
 
+	// 3 characters
 	for (AAICharacter* Character : CharacterList)
 	{
+		// 2 users
 		for (AActor* User : GridUserList)
 		{
 			int32 UIndex = IGridUser::Execute_GetGridUser(User)->GetUserIndex();
@@ -126,7 +128,7 @@ void ACPP_TopDownGameState::SetAllCharacterOwners()
 			if (UIndex == CIndex && Cast<ACPP_TopDownControllerPlayer>(User)) 
 			{
 				Character->SetOwner(User);
-				Character->SetOwningUser(User);
+				Character->InitialiseGameValues(User);
 			}
 		}
 	}
