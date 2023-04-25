@@ -9,7 +9,7 @@
 
 // ------- FORWARD DECLARATIONS ---------
 class AAICharacter;
-class CPP_TopDownControllerPlayer;
+class ACPP_PPawn;
 
 
 UCLASS()
@@ -28,7 +28,7 @@ public:
 	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const;
 
 	UFUNCTION(BlueprintPure, Category = "CPP")
-		TArray<ACPP_TopDownControllerPlayer*> GetControllersTopDown() const;
+		TArray<ACPP_PPawn*> GetPlayerPawns() const;
 
 	UFUNCTION(BlueprintPure, Category = "CPP|Players")
 		AActor* GetUserByIndex(int32 InIndex) const;

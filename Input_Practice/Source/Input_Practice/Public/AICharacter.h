@@ -13,7 +13,6 @@
 
 // ------- FORWARD DECLARATIONS ---------
 class ACPP_TopDownGameState;
-class ACPP_TopDownControllerPlayer;
 
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FActionTakenDelegate, bool, HasActed);

@@ -124,6 +124,9 @@ public:
 	UFUNCTION(BlueprintPure, Category = "CPP|Gameplay")
 		int32 GetUserIndex() const;
 
+	UFUNCTION(BlueprintPure, Category = "CPP|Gameplay")
+		bool GetIsServer() const;
+
 
 
 	UFUNCTION(BlueprintCallable, Category = "CPP|References")

@@ -3,7 +3,7 @@
 
 #include "CPP_TopDownGameState.h"
 #include "AICharacter.h"
-#include "CPP_TopDownControllerPlayer.h"
+#include "CPP_PPawn.h"
 #include "Net/UnrealNetwork.h"
 #include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
 #include "GameFramework/PlayerState.h"
@@ -19,24 +19,17 @@ void ACPP_TopDownGameState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>
 	DOREPLIFETIME(ACPP_TopDownGameState, CharacterList);
 }
 
-/// <summary>
-/// Get Existing 'Top Down Controllers' (Players)
-/// </summary>
-/// <returns></returns>
-TArray<ACPP_TopDownControllerPlayer*>  ACPP_TopDownGameState::GetControllersTopDown() const
+TArray<ACPP_PPawn*> ACPP_TopDownGameState::GetPlayerPawns() const
 {
-
-	TArray<ACPP_TopDownControllerPlayer*> ControllerArray;
+	TArray<ACPP_PPawn*> PawnArray;
 
 	for (TObjectPtr<APlayerState> PlayerState : PlayerArray)
 	{
-		APlayerController* ControllerPtr = PlayerState.Get()->GetPlayerController();
-		ControllerArray.Add(Cast<ACPP_TopDownControllerPlayer>(ControllerPtr));
+		APawn* PawnPtr = PlayerState.Get()->GetOwningController()->GetPawn();
+		PawnArray.Add(Cast<ACPP_PPawn>(PawnPtr));
 	}
 
-	UE_LOG(LogTemp, Warning, TEXT("Successfully got all TopDown controllers without error!"));
-
-	return ControllerArray;
+	return PawnArray;
 }
 
 AActor* ACPP_TopDownGameState::GetUserByIndex(int32 InIndex) const
@@ -125,7 +118,7 @@ void ACPP_TopDownGameState::SetAllCharacterOwners()
 			int32 UIndex = IGridUser::Execute_GetGridUser(User)->GetUserIndex();
 			int32 CIndex = Character->GetPlayerIndex();
 
-			if (UIndex == CIndex && Cast<ACPP_TopDownControllerPlayer>(User)) 
+			if (UIndex == CIndex && Cast<ACPP_PPawn>(User)) 
 			{
 				Character->SetOwner(User);
 				Character->InitialiseGameValues(User);

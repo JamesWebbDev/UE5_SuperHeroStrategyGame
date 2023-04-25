@@ -3,8 +3,10 @@
 
 #include "AComp_GridUser.h"
 #include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetSystemLibrary.h"
 #include "CPP_TopDownGameMode.h"
 #include "AICharacter.h"
+
 
 // Sets default values for this component's properties
 UAComp_GridUser::UAComp_GridUser()
@@ -188,6 +190,11 @@ void UAComp_GridUser::SetUserIndex(int32 NewIndex)
 int32 UAComp_GridUser::GetUserIndex() const
 {
 	return UserIndex;
+}
+
+bool UAComp_GridUser::GetIsServer() const
+{
+	return UKismetSystemLibrary::IsServer(this->_getUObject());
 }
 
 void UAComp_GridUser::SetSelectedCharacter(AAICharacter* InCharacter)

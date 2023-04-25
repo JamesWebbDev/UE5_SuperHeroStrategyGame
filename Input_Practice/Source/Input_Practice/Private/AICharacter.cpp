@@ -181,8 +181,15 @@ void AAICharacter::SetHasActedThisRotation(bool NewValue)
 
 void AAICharacter::SetOwningUser(AActor* InUser)
 {
-	OwningUser = InUser->FindComponentByClass<UAComp_GridUser>();
+	if (InUser == NULL)
+	{
+		return;
+	}
 
+	if (InUser->Implements<UGridUser>())
+	{
+		OwningUser = IGridUser::Execute_GetGridUser(InUser);
+	}
 	//UE_LOG(LogTemp, Warning, TEXT("WAS CAST TO GRIDUSER INVALID ON SET? %s"), OwningUser == nullptr);
 
 	SetIsOwnerLocalPlayerController(InUser);
@@ -196,6 +203,7 @@ void AAICharacter::SetIsOwnerLocalPlayerController(AActor* NewOwner)
 	{
 		IsOwnerLocalPlayerController = false;
 		UE_LOG(LogTemp, Warning, TEXT("CAST TO IS LOCAL PLAYER CONTROLLER FAILED"));
+		return;
 	}
 
 	IsOwnerLocalPlayerController = Control->IsLocalPlayerController();
