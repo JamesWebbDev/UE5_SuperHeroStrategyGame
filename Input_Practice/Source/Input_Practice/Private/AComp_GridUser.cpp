@@ -95,16 +95,16 @@ void UAComp_GridUser::Event_ServerRPC_AttackStarting_Implementation()
 
 void UAComp_GridUser::Event_ServerRPC_AttackEnding_Implementation(AAICharacter* AttackingCharacter)
 {
-	AttackingCharacter->PrepareToStopAttack();
+	AttackingCharacter->Event_MultiRPC_StopAttack();
 
 	ACPP_TopDownGameMode* GameMode = Cast<ACPP_TopDownGameMode>(GetWorld()->GetAuthGameMode());
 
 	GameMode->CharacterFinalActionHasConcluded();
 }
 
-void UAComp_GridUser::Event_ServerRPC_StartingAttackValues_Implementation(AAICharacter* AttackingCharacter, const UDA_Attack* InAttack, const FVector InputPosition)
+void UAComp_GridUser::Event_ServerRPC_StartingAttackValues_Implementation(AAICharacter* AttackingCharacter, UDA_Attack* InAttack, const FVector InputPosition)
 {
-	AttackingCharacter->PrepareToStartAttack(InAttack, InputPosition);
+	AttackingCharacter->Event_MultiRPC_PrepareAttack(InAttack, InputPosition);
 }
 
 void UAComp_GridUser::Event_ClientRPC_StartTurn_Implementation(AAICharacter* InSelectedCharacter)
@@ -125,6 +125,18 @@ void UAComp_GridUser::Event_ClientRPC_EndTurn_Implementation()
 }
 
 void UAComp_GridUser::Event_ServerRPC_Move_Implementation(const E_PlayerActions InActionType, const FVector MoveLocation)
+{
+	ACPP_TopDownGameMode* GameMode = Cast<ACPP_TopDownGameMode>(GetWorld()->GetAuthGameMode());
+	AAICharacter* TempSelectedCharacter = GameMode->GetSelectedCharacter();
+
+	TempSelectedCharacter->Event_MultiRPC_SetTargetPosition(MoveLocation);
+	TempSelectedCharacter->Event_MultiRPC_ActionTaken(false);
+
+	GameMode->EndUserTurn(InActionType);
+}
+
+
+void UAComp_GridUser::Event_Local_Move(const E_PlayerActions InActionType, const FVector MoveLocation)
 {
 	ACPP_TopDownGameMode* GameMode = Cast<ACPP_TopDownGameMode>(GetWorld()->GetAuthGameMode());
 	AAICharacter* TempSelectedCharacter = GameMode->GetSelectedCharacter();
@@ -216,5 +228,4 @@ ACPP_Grid* UAComp_GridUser::GetGrid() const
 {
 	return Grid;
 }
-
 

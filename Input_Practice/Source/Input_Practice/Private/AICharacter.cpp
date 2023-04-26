@@ -6,6 +6,8 @@
 #include "CPP_TopDownGameState.h"
 #include "CPP_TopDownControllerPlayer.h"
 #include "Net/UnrealNetwork.h"
+#include "DA_Attack.h"
+#include "Kismet/KismetMathLibrary.h"
 
 
 // Sets default values
@@ -13,6 +15,8 @@ AAICharacter::AAICharacter()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+
+	CharRoot = GetRootComponent();
 
 	GridComponent = CreateDefaultSubobject<UAComp_Grid>(TEXT("GridComponent"));
 	HealthComponent = CreateDefaultSubobject<UAComp_Health>(TEXT("HealthComponent"));
@@ -111,6 +115,33 @@ void AAICharacter::Event_MultiRPC_SetTargetPosition_Implementation(FVector NewPo
 {
 	TargetDestination = NewPosition;
 	IsAtDestination = false;
+}
+
+void AAICharacter::Event_MultiRPC_PrepareAttack_Implementation(UDA_Attack* InAttack, const FVector InInputPos)
+{
+	UE_LOG(LogTemp, Display, TEXT("Received 'PrepareAttack' input from Multicast!"));
+
+	Server_Attack = InAttack;
+	Server_InputPos = InInputPos;
+
+	const FRotator LookRotation = UKismetMathLibrary::FindRelativeLookAtRotation(CharRoot->GetComponentTransform(), InInputPos);
+
+	CharRoot->SetWorldRotation(LookRotation);
+
+	//BindAttackAnim(Server_Attack->GetAnimInstance());
+	CharSkeletalMesh->LinkAnimClassLayers(Server_Attack->GetAnimInstance());
+}
+
+void AAICharacter::Event_MultiRPC_StopAttack_Implementation()
+{
+	//UnbindAttackAnim(Server_Attack->GetAnimInstance());
+	if (Server_Attack)
+	{
+		CharSkeletalMesh->UnlinkAnimClassLayers(Server_Attack->GetAnimInstance());
+	}
+
+	Server_Attack = nullptr;
+	Server_InputPos = FVector();
 }
 
 int32 AAICharacter::GetPlayerIndex() const

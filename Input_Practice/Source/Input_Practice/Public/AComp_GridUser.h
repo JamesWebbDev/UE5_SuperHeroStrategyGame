@@ -83,7 +83,7 @@ public:
 		void AttackThisFrame(AAICharacter* AttackingCharacter, UDA_Attack* InAttack, FVector InputPosition);
 
 	UFUNCTION(BlueprintCallable, Server, Reliable, Category = "CPP|Attacking")
-		void Event_ServerRPC_StartingAttackValues(AAICharacter* AttackingCharacter, const UDA_Attack* InAttack, const FVector InputPosition);
+		void Event_ServerRPC_StartingAttackValues(AAICharacter* AttackingCharacter, UDA_Attack* InAttack, const FVector InputPosition);
 
 	UFUNCTION(BlueprintCallable, Server, Reliable, Category = "CPP|Game Mode Relevant")
 		void Event_ServerRPC_AttackStarting();
@@ -91,6 +91,8 @@ public:
 	UFUNCTION(BlueprintCallable, Server, Reliable, BlueprintAuthorityOnly, Category = "CPP|Game Mode Relevant")
 		void Event_ServerRPC_AttackEnding(AAICharacter* AttackingCharacter);
 	
+	UFUNCTION(BlueprintCallable, Category = "CPP|Test")
+		void Event_Local_Move(const E_PlayerActions InActionType, const FVector MoveLocation);
 
 
 	UFUNCTION(BlueprintCallable, Server, Reliable, Category = "CPP|User Actions")

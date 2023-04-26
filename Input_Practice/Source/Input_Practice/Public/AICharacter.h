@@ -30,6 +30,7 @@ public:
 	// Sets default values for this character's properties
 	AAICharacter();
 
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "CPP|References")
 		ACPP_TopDownGameState* TDGameState;
 
@@ -37,6 +38,12 @@ public:
 		UAComp_GridUser* OwningUser;
 
 	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "CPP|Components")
+		USkeletalMeshComponent* CharSkeletalMesh;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "CPP|Components")
+		USceneComponent* CharRoot;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "CPP|Components")
 		UAComp_Grid* GridComponent;
@@ -90,6 +97,12 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "CPP|Gameplay")
 		bool  IsOwnerLocalPlayerController;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "CPP|Server Relevant")
+		UDA_Attack* Server_Attack;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "CPP|Server Relevant")
+		FVector Server_InputPos;
+
 
 protected:
 	// Called when the game starts or when spawned
@@ -123,10 +136,10 @@ public:
 		void AttackPositions(const TArray<FVector2D>& AttackedTiles, const int32 Damage);
 
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "CPP|BP Accessible")
-		void PrepareToStartAttack(const UDA_Attack* InAttack, const FVector InputPos);
+		void BindAttackAnim(TSubclassOf<class UAnimInstance> InAnim);
 
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "CPP|BP Accessible")
-		void PrepareToStopAttack();
+		void UnbindAttackAnim(TSubclassOf<class UAnimInstance> InAnim);
 
 	// Networked Events
 
@@ -135,6 +148,12 @@ public:
 
 	UFUNCTION(BlueprintCallable, NetMulticast, Reliable, Category = "CPP|Turn Flow")
 		void Event_MultiRPC_SetTargetPosition(const FVector NewPosition);
+
+	UFUNCTION(BlueprintCallable, NetMulticast, Reliable, Category = "CPP|Turn Flow")
+		void Event_MultiRPC_PrepareAttack(UDA_Attack* InAttack, const FVector InInputPos);
+
+	UFUNCTION(BlueprintCallable, NetMulticast, Reliable, Category = "CPP|Turn Flow")
+		void Event_MultiRPC_StopAttack();
 
 	// Functions
 
