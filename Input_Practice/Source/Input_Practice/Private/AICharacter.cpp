@@ -124,20 +124,23 @@ void AAICharacter::Event_MultiRPC_PrepareAttack_Implementation(UDA_Attack* InAtt
 	Server_Attack = InAttack;
 	Server_InputPos = InInputPos;
 
-	const FRotator LookRotation = UKismetMathLibrary::FindRelativeLookAtRotation(CharRoot->GetComponentTransform(), InInputPos);
+	//const FRotator LookRotation = UKismetMathLibrary::FindRelativeLookAtRotation(CharRoot->GetComponentTransform(), InInputPos);
+
+	const FRotator LookRotation = (InInputPos - CharRoot->GetComponentLocation()).Rotation();
 
 	CharRoot->SetWorldRotation(LookRotation);
 
-	//BindAttackAnim(Server_Attack->GetAnimInstance());
-	CharSkeletalMesh->LinkAnimClassLayers(Server_Attack->GetAnimInstance());
+	BindAttackAnim(Server_Attack->GetAnimInstance());
+	//CharSkeletalMesh->LinkAnimClassLayers(Server_Attack->GetAnimInstance());
 }
 
 void AAICharacter::Event_MultiRPC_StopAttack_Implementation()
 {
-	//UnbindAttackAnim(Server_Attack->GetAnimInstance());
+	
 	if (Server_Attack)
 	{
-		CharSkeletalMesh->UnlinkAnimClassLayers(Server_Attack->GetAnimInstance());
+		UnbindAttackAnim(Server_Attack->GetAnimInstance());
+		//CharSkeletalMesh->UnlinkAnimClassLayers(Server_Attack->GetAnimInstance());
 	}
 
 	Server_Attack = nullptr;
