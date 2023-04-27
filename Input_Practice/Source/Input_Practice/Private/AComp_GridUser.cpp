@@ -6,6 +6,7 @@
 #include "Kismet/KismetSystemLibrary.h"
 #include "CPP_TopDownGameMode.h"
 #include "AICharacter.h"
+#include "GridUser.h"
 
 
 // Sets default values for this component's properties
@@ -114,6 +115,13 @@ void UAComp_GridUser::Event_ClientRPC_StartTurn_Implementation(AAICharacter* InS
 	Grid->SetSelectedTileState(true);
 	SetIsMyTurn(true);
 	SelectedCharacter->ActivateMoveableTiles();
+
+	AActor* CompOwner = GetOwner();
+
+	if (CompOwner->Implements<UGridUser>())
+	{
+		IGridUser::Execute_OnTurnStart(CompOwner);
+	}
 }
 
 void UAComp_GridUser::Event_ClientRPC_EndTurn_Implementation()
@@ -122,6 +130,13 @@ void UAComp_GridUser::Event_ClientRPC_EndTurn_Implementation()
 	Grid->SetMoveableTilesState(false);
 	Grid->SetSelectedTileState(false);
 	SetIsMyTurn(false);
+
+	AActor* CompOwner = GetOwner();
+
+	if (CompOwner->Implements<UGridUser>())
+	{
+		IGridUser::Execute_OnTurnEnd(CompOwner);
+	}
 }
 
 void UAComp_GridUser::Event_ServerRPC_Move_Implementation(const E_PlayerActions InActionType, const FVector MoveLocation)

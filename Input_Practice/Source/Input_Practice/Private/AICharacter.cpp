@@ -85,6 +85,8 @@ void AAICharacter::SetIsAtDestination(bool NewValue)
 	{
 		GridComponent->SetWorldPositionFromCurrentPosition();
 
+		UE_LOG(LogTemp, Display, TEXT("Has set New Position to Grid Component!"));
+
 		if (OnActionConcluded.IsBound())
 			OnActionConcluded.Broadcast();
 	}

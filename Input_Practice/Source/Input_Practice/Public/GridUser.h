@@ -26,4 +26,10 @@ public:
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "CPP|Grid User") 
 		UAComp_GridUser* GetGridUser() const;
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "CPP|GridUser")
+		void OnTurnStart();
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "CPP|GridUser")
+		void OnTurnEnd();
 };

@@ -144,9 +144,14 @@ void UAComp_Grid::GetSurroundingTiles(int32 Range, bool UseCurrentPosAsOrigin, T
 			FVector2D TempGridPos = FVector2D(Origin.X + X, Origin.Y + Y);
 			float Distance = FVector2D::Distance(TempGridPos, Origin);
 
+			if (!Grid->IsTileValid(TempGridPos.X, TempGridPos.Y))
+			{
+				continue;
+			}
+
 			if (Distance > 0 && Distance <= Range + (Range / 10))
 			{
-				OutTiles.Add(TempGridPos);
+				OutTiles.AddUnique(TempGridPos);
 			}
 		}
 	}
