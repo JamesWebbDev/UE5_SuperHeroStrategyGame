@@ -179,7 +179,7 @@ AAICharacter* ACPP_TopDownGameState::GetNextActiveCharacter()
 			continue;
 		}
 
-		if (Character->GetMoveRange() > NextCharacter->GetMoveRange())
+		if (Character->GetPriority() > NextCharacter->GetPriority())
 		{
 			NextCharacter = Character;
 		}

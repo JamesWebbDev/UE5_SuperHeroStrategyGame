@@ -91,6 +91,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "CPP|Gameplay")
 		int32 PlayerIndex;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "CPP|Gameplay", meta=(Tooltip = "Greater the value, the MORE priority this unit has to move!"))
+		int32 TurnPriority;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "CPP|Gameplay")
 		bool  HasActedThisRotation;
 
@@ -163,6 +166,9 @@ public:
 
 	UFUNCTION(BlueprintPure, Category = "CPP|Constants")
 		int32 GetMoveRange() const;
+
+	UFUNCTION(BlueprintPure, Category = "CPP|Constants")
+		int32 GetPriority() const;
 
 	UFUNCTION(BlueprintPure, Category = "CPP|Constants")
 		bool GetHasActedThisRotation() const;

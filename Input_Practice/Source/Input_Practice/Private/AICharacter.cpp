@@ -159,6 +159,11 @@ int32 AAICharacter::GetMoveRange() const
 	return MoveRange;
 }
 
+int32 AAICharacter::GetPriority() const
+{
+	return TurnPriority;
+}
+
 bool AAICharacter::GetHasActedThisRotation() const
 {
 	return HasActedThisRotation;
