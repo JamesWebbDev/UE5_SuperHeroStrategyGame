@@ -177,6 +177,9 @@ public:
 		bool IsValidGridTargetPosition(FVector2D AttackedTile, int32 Range) const;
 
 	UFUNCTION(BlueprintPure, Category = "CPP|Gameplay")
+		bool IsValidGridTarget(AAICharacter* InEnemyTarget, FVector2D AttackedTile, FVector2D AttackerTile, int32 InRange) const;
+
+	UFUNCTION(BlueprintPure, Category = "CPP|Gameplay")
 		bool IsValidGridMovePosition(FVector2D MoveableTile) const;
 
 	UFUNCTION(BlueprintCallable, Category = "CPP|Gameplay")
