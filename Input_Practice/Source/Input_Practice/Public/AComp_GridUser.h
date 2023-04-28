@@ -90,9 +90,6 @@ public:
 
 	UFUNCTION(BlueprintCallable, Server, Reliable, BlueprintAuthorityOnly, Category = "CPP|Game Mode Relevant")
 		void Event_ServerRPC_AttackEnding(AAICharacter* AttackingCharacter);
-	
-	UFUNCTION(BlueprintCallable, Category = "CPP|Test")
-		void Event_Local_Move(const E_PlayerActions InActionType, const FVector MoveLocation);
 
 
 	UFUNCTION(BlueprintCallable, Server, Reliable, Category = "CPP|User Actions")

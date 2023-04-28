@@ -151,17 +151,6 @@ void UAComp_GridUser::Event_ServerRPC_Move_Implementation(const E_PlayerActions 
 }
 
 
-void UAComp_GridUser::Event_Local_Move(const E_PlayerActions InActionType, const FVector MoveLocation)
-{
-	ACPP_TopDownGameMode* GameMode = Cast<ACPP_TopDownGameMode>(GetWorld()->GetAuthGameMode());
-	AAICharacter* TempSelectedCharacter = GameMode->GetSelectedCharacter();
-
-	TempSelectedCharacter->Event_MultiRPC_SetTargetPosition(MoveLocation);
-	TempSelectedCharacter->Event_MultiRPC_ActionTaken(false);
-
-	GameMode->EndUserTurn(InActionType);
-}
-
 void UAComp_GridUser::Event_ServerRPC_Attack_Implementation(const E_PlayerActions InActionType, const TArray<FVector2D>& InAttackedPositions, const int32 InDamage)
 {
 	ACPP_TopDownGameMode* GameMode = Cast<ACPP_TopDownGameMode>(GetWorld()->GetAuthGameMode());

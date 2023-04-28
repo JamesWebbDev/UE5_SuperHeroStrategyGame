@@ -196,11 +196,17 @@ bool AAICharacter::IsValidGridMovePosition(FVector2D MoveableTile) const
 {
 	AAICharacter* FoundCharacter;
 	const bool CharacterIsAtTile = TDGameState->GetCharacterAtGridPosition(MoveableTile, FoundCharacter);
+	bool OtherCharIsAtTile = false;
+
+	if (CharacterIsAtTile)
+	{
+		OtherCharIsAtTile = FoundCharacter != this;
+	}
 
 	const float DistanceToTile = FVector2D::Distance(MoveableTile, GridComponent->GetCurrentGridPosition());
 	const bool TileInRange = DistanceToTile <= MoveRange + (MoveRange / 10);
 
-	if (!CharacterIsAtTile && TileInRange)
+	if (!OtherCharIsAtTile && TileInRange)
 	{
 		return true;
 	}
@@ -216,7 +222,11 @@ void AAICharacter::SetHasActedThisRotation(bool NewValue)
 
 	if (HasActedThisRotation)
 	{
-		GridComponent->SetGridPosition(GridComponent->GetCurrentLocationAtTile());
+		const FVector2D NewPos = GridComponent->GetCurrentLocationAtTile();
+
+		UE_LOG(LogTemp, Display, TEXT("SETTING New Grid Position: (%f, %f)!!"), NewPos.X, NewPos.Y);
+
+		GridComponent->SetGridPosition(NewPos);
 	}
 }
 
