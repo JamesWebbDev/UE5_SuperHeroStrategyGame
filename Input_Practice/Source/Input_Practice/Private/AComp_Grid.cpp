@@ -131,9 +131,9 @@ void UAComp_Grid::GetAttackableTiles(TArray<FVector2D> AffectedTiles_UpDir, FVec
 	}
 }
 
-void UAComp_Grid::GetAttackableTiles_FixedDir(TArray<FVector2D> AffectedTiles_UpDir, E_CardinalDirection InDir, TArray<FVector2D>& OutTiles)
+void UAComp_Grid::GetAttackableTiles_FixedDir(TArray<FVector2D> AffectedTiles_UpDir, E_CardinalDirection InDir, FVector2D InOrigin, TArray<FVector2D>& OutTiles)
 {
-	OutTiles = RotatePositionsThenApplyOrigin(AffectedTiles_UpDir, GetCurrentLocationAtTile(), InDir);
+	OutTiles = RotatePositionsThenApplyOrigin(AffectedTiles_UpDir, InOrigin, InDir);
 }
 
 void UAComp_Grid::GetSurroundingTiles(int32 Range, bool UseCurrentPosAsOrigin, TArray<FVector2D>& OutTiles)

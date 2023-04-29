@@ -66,7 +66,7 @@ public:
 		void GetAttackableTiles(TArray<FVector2D>AffectedTiles_UpDir, FVector MousePosition, TArray<FVector2D>& OutTiles);
 
 	UFUNCTION(BlueprintCallable, Category = "CPP")
-		void GetAttackableTiles_FixedDir(TArray<FVector2D>AffectedTiles_UpDir, E_CardinalDirection InDir, TArray<FVector2D>& OutTiles);
+		void GetAttackableTiles_FixedDir(TArray<FVector2D>AffectedTiles_UpDir, E_CardinalDirection InDir, FVector2D InOrigin, TArray<FVector2D>& OutTiles);
 
 	UFUNCTION(BlueprintCallable, Category = "CPP")
 		void GetSurroundingTiles(int32 Range, bool UseCurrentPosAsOrigin, TArray<FVector2D>& OutTiles);
