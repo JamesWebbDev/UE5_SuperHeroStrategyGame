@@ -15,6 +15,8 @@ struct FScenario
 {
 	GENERATED_BODY()
 
+public:
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "CPP")
 		int32 Score = -10000;
 

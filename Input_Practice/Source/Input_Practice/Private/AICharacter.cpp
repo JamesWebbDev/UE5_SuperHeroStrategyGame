@@ -192,13 +192,8 @@ bool AAICharacter::IsValidGridTargetPosition(FVector2D AttackedTile, int32 Range
 	return false;
 }
 
-bool AAICharacter::IsValidGridTarget(AAICharacter* InEnemyTarget, FVector2D AttackedTile, FVector2D AttackerTile, int32 InRange) const
+bool AAICharacter::IsValidGridTarget(FVector2D AttackedTile, FVector2D AttackerTile, int32 InRange) const
 {
-	if (InEnemyTarget == nullptr)
-	{
-		return false;
-	}
-
 	const float DistanceToTile = FVector2D::Distance(AttackedTile, AttackerTile);
 	const bool TileInRange = DistanceToTile <= InRange + (InRange / 10);
 
