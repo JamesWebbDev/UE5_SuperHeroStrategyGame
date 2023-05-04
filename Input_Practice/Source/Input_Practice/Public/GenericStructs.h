@@ -21,13 +21,13 @@ public:
 		int32 Score = -10000;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "CPP")
-		FVector2D MovePosition;
+		FVector2D MovePosition = FVector2D::Zero();
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "CPP")
 		bool bIsAttacking = false;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "CPP")
-		UDA_Attack* AttackType;
+		UDA_Attack* AttackType = nullptr;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "CPP")
 		TArray<FVector2D> AttackPositions;

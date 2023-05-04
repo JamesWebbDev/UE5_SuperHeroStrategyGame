@@ -46,7 +46,7 @@ protected:
 
 
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "CPP|Procedural Meshes")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "CPP|Procedural Meshes")
 		UMaterialInterface* Material;
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "CPP|Arrays")
